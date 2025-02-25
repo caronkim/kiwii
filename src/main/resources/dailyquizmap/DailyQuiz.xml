@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="DailyQuiz">
+    <!-- CDATA 는 SQL query 내부의 특수문자(<>)가 tag로 인식되지 않도록 처리 -->
+    <resultMap id="DailyQuizResultMap" type="org.example.kiwii.vo.dailyquiz.DailyQuizVO">
+        <result column="QUIZ_ID" property="id"/>
+        <result column="QUESTION_TYPE" property="questionType"/>
+        <result column="QUIZ_DATE" property="quizDate"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="UPDATED_AT" property="updatedAt"/>
+        <result column="DELETED_AT" property="deletedAt"/>
+    </resultMap>
+
+
+    <select id="selectAllQuiz"
+            resultType="org.example.kiwii.vo.dailyquiz.DailyQuizVO"
+            resultMap="DailyQuizResultMap"
+    >
+        <![CDATA[
+        SELECT QUIZ_ID,
+               question,
+               option1,
+               option2,
+               option3,
+               option4,
+               QUIZ_DATE
+        FROM DAILYQUIZZES
+        ]]>
+    </select>
+
+
+    <select id="selectTodayQuiz"
+            resultType="org.example.kiwii.vo.dailyquiz.DailyQuizVO"
+            resultMap="DailyQuizResultMap"
+    >
+        <![CDATA[
+        SELECT QUIZ_ID, QUESTION, QUESTION_TYPE, OPTION1, OPTION2, OPTION3, OPTION4, ANSWER,
+               QUIZ_DATE, CREATED_AT, UPDATED_AT, DELETED_AT
+        FROM DAILYQUIZZES
+        WHERE QUIZ_DATE >= TRUNC(SYSDATE)
+          AND QUIZ_DATE < TRUNC(SYSDATE) + INTERVAL '1' DAY
+        ]]>
+    </select>
+</mapper>

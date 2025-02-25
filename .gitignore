@@ -36,3 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### mybatis configuration ###
+src/main/resources/mybatis-config.xml
+src/main/resources/driver.properties
