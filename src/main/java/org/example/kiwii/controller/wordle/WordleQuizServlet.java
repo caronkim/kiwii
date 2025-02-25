@@ -1,10 +1,10 @@
-package org.example.kiwii.controller;
+package org.example.kiwii.controller.wordle;
 
 import com.google.gson.Gson;
-import org.example.kiwii.dto.CheolHwanApiResponse;
-import org.example.kiwii.dto.ResponseGetWordleQuizDTO;
-import org.example.kiwii.service.WordleService;
-import org.example.kiwii.vo.WordleQuizVO;
+import org.example.kiwii.dto.ApiResponse;
+import org.example.kiwii.dto.wordle.ResponseGetWordleQuizDTO;
+import org.example.kiwii.service.wordle.WordleService;
+import org.example.kiwii.vo.wordle.WordleQuizVO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "wordleQuiz", value = "/wordle-quizzes")
-public class WordleQuizController extends HttpServlet {
+public class WordleQuizServlet extends HttpServlet {
     // 현재 문제 가져오기
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WordleService wordleService = new WordleService();
         WordleQuizVO wordleQuiz = wordleService.getCurrentQuiz();
 
-        CheolHwanApiResponse<ResponseGetWordleQuizDTO> responseData = new CheolHwanApiResponse<>();
+        ApiResponse<ResponseGetWordleQuizDTO> responseData = new ApiResponse<>();
         responseData.setStatus(200);
 
         if (wordleQuiz == null) {

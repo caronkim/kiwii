@@ -1,4 +1,4 @@
-package org.example.kiwii.dto;
+package org.example.kiwii.dto.wordle;
 
 public class RequestPostWordleTrialDTO {
     private int userId;

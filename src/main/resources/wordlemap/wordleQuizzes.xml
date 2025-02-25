@@ -3,13 +3,13 @@
         PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wordlequizzes">
-    <resultMap id="wordleCurrentQuiz" type="org.example.kiwii.vo.WordleQuizVO">
+    <resultMap id="wordleCurrentQuiz" type="org.example.kiwii.vo.wordle.WordleQuizVO">
         <id column="ID" property="id"/>
         <result column="STARTED_AT" property="startedAt"/>
         <result column="FINISHED_AT" property="finishedAt"/>
         <result column="CHARACTER_LENGTH" property="word.characterLength"/>
     </resultMap>
-    <resultMap id="wordleQuiz" type="org.example.kiwii.vo.WordleQuizVO">
+    <resultMap id="wordleQuiz" type="org.example.kiwii.vo.wordle.WordleQuizVO">
         <id column="ID" property="id"/>
         <result column="STARTED_AT" property="startedAt"/>
         <result column="FINISHED_AT" property="finishedAt"/>

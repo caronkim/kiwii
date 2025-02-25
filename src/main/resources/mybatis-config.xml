@@ -17,9 +17,9 @@
 
     <!--  TypeAlias  -->
     <typeAliases>
-        <typeAlias type="org.example.kiwii.vo.WordleQuizVO" alias="WordleQuiz"/>
-        <typeAlias type="org.example.kiwii.vo.WordleTrialVO" alias="WordleTrial"/>
-        <typeAlias type="org.example.kiwii.vo.WordleWordVO" alias="WordleWord"/>
+        <typeAlias type="org.example.kiwii.vo.wordle.WordleQuizVO" alias="WordleQuiz"/>
+        <typeAlias type="org.example.kiwii.vo.wordle.WordleTrialVO" alias="WordleTrial"/>
+        <typeAlias type="org.example.kiwii.vo.wordle.WordleWordVO" alias="WordleWord"/>
     </typeAliases>
 
     <!--  DB 연결 정보  -->
@@ -44,9 +44,9 @@
     <!--  SQL을 작성하는 Mapper 파일의 경로를 지정  -->
     <!--  일반적으로 table 당 1개씩  -->
     <mappers>
-        <mapper resource="./sqlMap/wordleQuizzes.xml"/>
-        <mapper resource="./sqlMap/wordleTrials.xml"/>
-        <mapper resource="./sqlMap/wordleWords.xml"/>
+        <mapper resource="./wordlemap/wordleQuizzes.xml"/>
+        <mapper resource="./wordlemap/wordleTrials.xml"/>
+        <mapper resource="./wordlemap/wordleWords.xml"/>
         <mapper resource="dailyquizmap/DailyQuiz.xml"/>
         <mapper resource="usermap/User.xml"/>
         <mapper resource="usermap/PointHistory.xml"/>

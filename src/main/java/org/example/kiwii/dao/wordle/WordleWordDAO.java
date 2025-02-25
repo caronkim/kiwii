@@ -1,4 +1,4 @@
-package org.example.kiwii.dao;
+package org.example.kiwii.dao.wordle;
 
 import org.apache.ibatis.session.SqlSession;
 

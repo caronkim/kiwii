@@ -1,12 +1,12 @@
-package org.example.kiwii.service;
+package org.example.kiwii.service.wordle;
 
 import org.apache.ibatis.session.SqlSession;
-import org.example.kiwii.dao.WordleQuizDAO;
-import org.example.kiwii.dao.WordleTrialDAO;
-import org.example.kiwii.dao.WordleWordDAO;
+import org.example.kiwii.dao.wordle.WordleQuizDAO;
+import org.example.kiwii.dao.wordle.WordleTrialDAO;
+import org.example.kiwii.dao.wordle.WordleWordDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
-import org.example.kiwii.vo.WordleQuizVO;
-import org.example.kiwii.vo.WordleTrialVO;
+import org.example.kiwii.vo.wordle.WordleQuizVO;
+import org.example.kiwii.vo.wordle.WordleTrialVO;
 
 import java.util.List;
 

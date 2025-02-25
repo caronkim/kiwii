@@ -1,7 +1,7 @@
-package org.example.kiwii.dao;
+package org.example.kiwii.dao.wordle;
 
 import org.apache.ibatis.session.SqlSession;
-import org.example.kiwii.vo.WordleQuizVO;
+import org.example.kiwii.vo.wordle.WordleQuizVO;
 
 public class WordleQuizDAO {
     private SqlSession sqlSession;

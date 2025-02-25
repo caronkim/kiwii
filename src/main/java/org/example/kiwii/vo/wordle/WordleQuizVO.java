@@ -1,4 +1,4 @@
-package org.example.kiwii.vo;
+package org.example.kiwii.vo.wordle;
 
 import java.sql.Timestamp;
 

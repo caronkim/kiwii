@@ -1,4 +1,4 @@
-package org.example.kiwii.controller.Point;
+package org.example.kiwii.controller.point;
 
 import com.google.gson.Gson;
 import org.example.kiwii.CookieUtil.CookieUtil;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/api/point/*")

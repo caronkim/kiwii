@@ -1,12 +1,12 @@
-package org.example.kiwii.controller;
+package org.example.kiwii.controller.wordle;
 
 import com.google.gson.Gson;
-import org.example.kiwii.dto.CheolHwanApiResponse;
-import org.example.kiwii.dto.RequestPostWordleTrialDTO;
-import org.example.kiwii.dto.ResponseGetWordleTrialDTO;
-import org.example.kiwii.dto.ResponsePostWordleTrialDTO;
-import org.example.kiwii.service.WordleService;
-import org.example.kiwii.vo.WordleTrialVO;
+import org.example.kiwii.dto.ApiResponse;
+import org.example.kiwii.dto.wordle.RequestPostWordleTrialDTO;
+import org.example.kiwii.dto.wordle.ResponseGetWordleTrialDTO;
+import org.example.kiwii.dto.wordle.ResponsePostWordleTrialDTO;
+import org.example.kiwii.service.wordle.WordleService;
+import org.example.kiwii.vo.wordle.WordleTrialVO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "wordleTrial", value = "/wordle-trials")
-public class WordleTrialController extends HttpServlet {
+public class WordleTrialServlet extends HttpServlet {
     // wordle 시도 내용 가져오기
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class WordleTrialController extends HttpServlet {
         List<WordleTrialVO> wordleTrials = wordleService.getWordleTrials(userId, quizId);
 
         Gson gson = new Gson();
-        CheolHwanApiResponse<List<ResponseGetWordleTrialDTO>> responseData = new CheolHwanApiResponse<>();
+        ApiResponse<List<ResponseGetWordleTrialDTO>> responseData = new ApiResponse<>();
         List<ResponseGetWordleTrialDTO> trials = new ArrayList<>();
         for (WordleTrialVO wordleTrial : wordleTrials) {
             trials.add(new ResponseGetWordleTrialDTO(wordleTrial));
@@ -48,7 +48,7 @@ public class WordleTrialController extends HttpServlet {
         WordleService wordleService = new WordleService();
         WordleTrialVO wordleTrial = wordleService.tryAnswer(requestData.getUserId(), requestData.getQuizId(), requestData.getCharacters());
 
-        CheolHwanApiResponse<ResponsePostWordleTrialDTO> responseData = new CheolHwanApiResponse<>();
+        ApiResponse<ResponsePostWordleTrialDTO> responseData = new ApiResponse<>();
         responseData.setStatus(200);
         if (wordleTrial == null) {
             responseData.setMessage("fail");

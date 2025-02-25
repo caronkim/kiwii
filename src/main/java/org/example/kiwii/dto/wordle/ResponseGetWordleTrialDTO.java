@@ -1,6 +1,6 @@
-package org.example.kiwii.dto;
+package org.example.kiwii.dto.wordle;
 
-import org.example.kiwii.vo.WordleTrialVO;
+import org.example.kiwii.vo.wordle.WordleTrialVO;
 
 import java.sql.Timestamp;
 
