@@ -1,4 +1,4 @@
-package org.example.kiwii.dto;
+package org.example.kiwii.dto.dailyquiz;
 
 public class QuizAnswerDTO {
     private int userId;

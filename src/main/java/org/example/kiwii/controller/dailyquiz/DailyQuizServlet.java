@@ -3,7 +3,7 @@ package org.example.kiwii.controller.dailyquiz;
 import com.google.gson.Gson;
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.dto.ApiResponse;
-import org.example.kiwii.dto.QuizAnswerDTO;
+import org.example.kiwii.dto.dailyquiz.QuizAnswerDTO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.service.dailyquiz.DailyQuizService;
 import org.example.kiwii.vo.dailyquiz.DailyQuizVO;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet("/dailyquiz/*")
+@WebServlet("/api/dailyquiz/*")
 public class DailyQuizServlet extends HttpServlet {
     private final Gson gson = new Gson();
     @Override
@@ -26,7 +26,7 @@ public class DailyQuizServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         //test
-        if (pathInfo.equals("/api/test")) {
+        if (pathInfo.equals("/test")) {
             SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
             List<DailyQuizVO> list = sqlSession.selectList("DailyQuiz.selectAllQuiz");
 
@@ -36,7 +36,7 @@ public class DailyQuizServlet extends HttpServlet {
             out.flush();
         }
 
-        if(pathInfo.equals("/api/todayquiz")) {
+        if(pathInfo.equals("/todayquiz")) {
             List<DailyQuizVO> list = DailyQuizService.getTodayQuiz();
             if (list != null) {
                 ApiResponse<List<DailyQuizVO>> response = new ApiResponse<>(200,"success", list);
@@ -59,7 +59,7 @@ public class DailyQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
 
-        if (pathInfo.equals("/api/test")) {
+        if (pathInfo.equals("/submit")) {
             //{
             //  "userId": 123,
             //  "quizId": 456,
@@ -100,12 +100,6 @@ public class DailyQuizServlet extends HttpServlet {
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }
-
-
-
-
-
-
         }
     }
 }

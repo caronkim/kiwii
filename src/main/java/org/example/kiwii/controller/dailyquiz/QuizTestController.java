@@ -1,4 +1,4 @@
-package org.example.kiwii.controller;
+package org.example.kiwii.controller.dailyquiz;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
