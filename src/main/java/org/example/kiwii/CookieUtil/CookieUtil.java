@@ -44,4 +44,14 @@ public class CookieUtil {
         cookie.setPath("/"); // 모든 경로에서 접근 가능
         resp.addCookie(cookie);
     }
+
+    public static boolean isLoginUser(HttpServletRequest req, int uuid) {
+        String uuidFromCookie = getCookieValue(req, "uuid");
+        String parsedUUID = Integer.toString(uuid);
+        if (uuidFromCookie != null && uuidFromCookie.equals(parsedUUID)) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
