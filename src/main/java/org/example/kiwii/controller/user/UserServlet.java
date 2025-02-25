@@ -25,6 +25,20 @@ public class UserServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo.equals("/information")) {
+            UserVO loginUser = CookieUtil.getUserFromCookies(req);
+
+            UserVO selectedUser = userService.selectUserByUserUUID(loginUser.getUuid());
+            if(selectedUser != null) {
+                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "success", selectedUser);
+
+                PrintWriter out = resp.getWriter();
+                out.print(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            }else {
+                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "error");
+
+            }
 
         }
     }

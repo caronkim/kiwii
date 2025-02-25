@@ -63,8 +63,5 @@ public class PointServlet extends HttpServlet {
             }
         }
 
-        if (pathInfo.equals("/my")) {
-
-        }
     }
 }

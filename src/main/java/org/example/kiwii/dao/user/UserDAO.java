@@ -20,4 +20,15 @@ public class UserDAO {
             return userVO;
         }
     }
+
+    public UserVO selectUserByUserUUID(int uuid) {
+        UserVO userVO = null;
+        try {
+            userVO = sqlSession.selectOne("User.selectUserByUserUUID", uuid);
+            return userVO;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return userVO;
+        }
+    }
 }
