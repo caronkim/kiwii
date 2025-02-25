@@ -47,5 +47,8 @@
         <mapper resource="./sqlMap/wordleQuizzes.xml"/>
         <mapper resource="./sqlMap/wordleTrials.xml"/>
         <mapper resource="./sqlMap/wordleWords.xml"/>
+        <mapper resource="dailyquizmap/DailyQuiz.xml"/>
+        <mapper resource="usermap/User.xml"/>
+        <mapper resource="usermap/PointHistory.xml"/>
     </mappers>
 </configuration>
