@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wordlequizzes">
+    <resultMap id="wordleCurrentQuiz" type="org.example.kiwii.vo.WordleQuizVO">
+        <id column="ID" property="id"/>
+        <result column="STARTED_AT" property="startedAt"/>
+        <result column="FINISHED_AT" property="finishedAt"/>
+        <result column="CHARACTER_LENGTH" property="word.characterLength"/>
+    </resultMap>
+    <resultMap id="wordleQuiz" type="org.example.kiwii.vo.WordleQuizVO">
+        <id column="ID" property="id"/>
+        <result column="STARTED_AT" property="startedAt"/>
+        <result column="FINISHED_AT" property="finishedAt"/>
+        <result column="WORD_ID" property="word.id"/>
+        <result column="CHARACTERS" property="word.characters"/>
+        <result column="CHARACTER_LENGTH" property="word.characterLength"/>
+    </resultMap>
+    <select id="selectCurrentQuiz" resultMap="wordleCurrentQuiz">
+        <!--  CDATA : SQL Query 안의 특수문자가 tag로 인식되지 않도록 처리  -->
+        <![CDATA[
+        SELECT
+            WQ.ID,
+            WQ.STARTED_AT,
+            WQ.FINISHED_AT,
+            WW.CHARACTER_LENGTH
+        FROM WORDLE_QUIZZES WQ,
+             WORDLE_WORDS WW
+        WHERE WQ.WORD_ID = WW.ID
+          AND WQ.STARTED_AT <= SYSTIMESTAMP
+          AND SYSTIMESTAMP <= WQ.FINISHED_AT
+        ]]>
+    </select>
+    <select id="selectWordleQuizById" resultMap="wordleQuiz">
+        <![CDATA[
+        SELECT WQ.ID,
+               WQ.STARTED_AT,
+               WQ.FINISHED_AT,
+               WQ.CREATED_AT,
+               WQ.UPDATED_AT,
+               WW.ID AS WORD_ID,
+               WW.CHARACTERS,
+               WW.CHARACTER_LENGTH
+        FROM WORDLE_QUIZZES WQ,
+             WORDLE_WORDS WW
+        WHERE WQ.WORD_ID = WW.ID
+          AND WQ.DELETED_AT IS NULL
+          AND WQ.ID = #{wordleQuizId}
+        ]]>
+    </select>
+    <select id="selectAvailableWordleQuizById" resultMap="wordleQuiz">
+        <![CDATA[
+        SELECT WQ.ID,
+               WQ.STARTED_AT,
+               WQ.FINISHED_AT,
+               WQ.CREATED_AT,
+               WQ.UPDATED_AT,
+               WW.ID AS WORD_ID,
+               WW.CHARACTERS,
+               WW.CHARACTER_LENGTH
+        FROM WORDLE_QUIZZES WQ,
+             WORDLE_WORDS WW
+        WHERE WQ.WORD_ID = WW.ID
+          AND WQ.DELETED_AT IS NULL
+          AND WQ.ID = #{wordleQuizId}
+          AND WQ.STARTED_AT <= SYSTIMESTAMP
+          AND SYSTIMESTAMP <= WQ.FINISHED_AT
+        ]]>
+    </select>
+</mapper>

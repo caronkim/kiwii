@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wordletrials">
+    <resultMap id="wordleTrialVO" type="org.example.kiwii.vo.WordleTrialVO">
+        <id column="ID" property="id"/>
+        <result column="QUIZ_ID" property="quizId"/>
+        <result column="UUID" property="uuid"/>
+        <result column="CHARACTERS" property="characters"/>
+        <result column="STRIKES" property="strikes"/>
+        <result column="BALLS" property="balls"/>
+        <result column="NONES" property="nones"/>
+        <result column="IS_ANSWER" property="isAnswer"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="UPDATED_AT" property="updatedAt"/>
+        <result column="DELETED_AT" property="deletedAt"/>
+    </resultMap>
+    <select id="selectWordleTrialCount" parameterType="Map" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+        FROM WORDLE_TRIALS
+        WHERE DELETED_AT IS NULL
+          AND QUIZ_ID = #{quizId}
+          AND UUID = #{userId}
+        ]]>
+    </select>
+    <select id="selectAnswerWordleTrial" parameterType="Map"
+            resultMap="wordleTrialVO">
+        <![CDATA[
+        SELECT *
+        FROM WORDLE_TRIALS
+        WHERE DELETED_AT IS NULL
+          AND QUIZ_ID = #{quizId}
+          AND UUID = #{userId}
+          AND IS_ANSWER = 1
+        ]]>
+    </select>
+    <select id="selectWordleTrialsByUserIdAndQuizId" parameterType="Map"
+            resultMap="wordleTrialVO">
+        <![CDATA[
+        SELECT *
+        FROM WORDLE_TRIALS
+        WHERE DELETED_AT IS NULL
+          AND QUIZ_ID = #{quizId}
+          AND UUID = #{userId}
+        ]]>
+    </select>
+    <insert id="insertWordleTrial" parameterType="org.example.kiwii.vo.WordleTrialVO" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        <![CDATA[
+        INSERT INTO WORDLE_TRIALS(QUIZ_ID, UUID, CHARACTERS, STRIKES, BALLS, NONES, IS_ANSWER)
+        VALUES (#{quizId}, #{uuid}, #{characters}, #{strikes}, #{balls}, #{nones}, #{isAnswer})
+        ]]>
+    </insert>
+</mapper>

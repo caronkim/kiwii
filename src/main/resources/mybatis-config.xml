@@ -12,11 +12,14 @@
     <settings>
         <setting name="jdbcTypeForNull" value="NULL"/>
         <!--  log 설정  -->
-<!--        <setting name="logImpl" value="STDOUT_LOGGING"/>-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
     </settings>
 
     <!--  TypeAlias  -->
     <typeAliases>
+        <typeAlias type="org.example.kiwii.vo.WordleQuizVO" alias="WordleQuiz"/>
+        <typeAlias type="org.example.kiwii.vo.WordleTrialVO" alias="WordleTrial"/>
+        <typeAlias type="org.example.kiwii.vo.WordleWordVO" alias="WordleWord"/>
     </typeAliases>
 
     <!--  DB 연결 정보  -->
@@ -41,5 +44,8 @@
     <!--  SQL을 작성하는 Mapper 파일의 경로를 지정  -->
     <!--  일반적으로 table 당 1개씩  -->
     <mappers>
+        <mapper resource="./sqlMap/wordleQuizzes.xml"/>
+        <mapper resource="./sqlMap/wordleTrials.xml"/>
+        <mapper resource="./sqlMap/wordleWords.xml"/>
     </mappers>
 </configuration>
