@@ -109,4 +109,21 @@ public class UserService {
         }
     }
 
+    public UserVO insertUser(UserVO registerTryUser) {
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        UserDAO userDAO = new UserDAO(sqlSession);
+
+        try {
+            UserVO registeredUser = userDAO.insertUser(registerTryUser);
+            sqlSession.commit();
+            return registeredUser;
+
+
+        } catch (Exception e){
+            sqlSession.rollback(); // ✅ 예외 발생 시 롤백
+            throw new RuntimeException("포인트 사용 중 오류 발생: " + e.getMessage(), e);
+        } finally {
+            sqlSession.close(); // ✅ 중복 close() 제거
+        }
+    }
 }

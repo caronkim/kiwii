@@ -63,6 +63,14 @@
         WHERE UUID = #{uuid}
         ]]>
     </update>
+    <insert id="insertUser"
+            parameterType="org.example.kiwii.vo.user.UserVO"
+    >
+    <![CDATA[
+        INSERT INTO USERS (USERNAME, PASSWORD, ACCOUNT_ID, POINT, CREATED_AT, UPDATED_AT)
+        VALUES (#{username}, #{password}, #{accountId}, 0, SYSTIMESTAMP, SYSTIMESTAMP)
+        ]]>
+    </insert>
 
 
 </mapper>

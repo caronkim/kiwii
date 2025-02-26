@@ -101,12 +101,20 @@ public class PointServlet extends HttpServlet {
 
             UserVO loginUser = CookieUtil.getUserFromCookies(req);
 
+            if(loginUser == null) {
+                ApiResponse<Object> apiResponse = new ApiResponse<>(200, "error");
+                PrintWriter out = resp.getWriter();
+                out.print(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            }
+
             List<PointHistoryVO> list;
 
             list = pointService.selectPointHistoryByUserUUID(loginUser.getUuid());
 
             if (list.isEmpty()) {
-                ApiResponse apiResponse = new ApiResponse(200, "wrong uuid");
+                ApiResponse<Object> apiResponse = new ApiResponse<>(200, "error");
                 PrintWriter out = resp.getWriter();
                 out.print(gson.toJson(apiResponse));
                 out.flush();

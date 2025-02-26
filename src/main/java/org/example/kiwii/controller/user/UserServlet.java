@@ -27,6 +27,15 @@ public class UserServlet extends HttpServlet {
         if (pathInfo.equals("/information")) {
             UserVO loginUser = CookieUtil.getUserFromCookies(req);
 
+            if (loginUser == null) {
+                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "error");
+
+                PrintWriter out = resp.getWriter();
+                out.print(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            }
+
             UserVO selectedUser = userService.selectUserByUserUUID(loginUser.getUuid());
             if(selectedUser != null) {
                 ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "success", selectedUser);
@@ -81,6 +90,32 @@ public class UserServlet extends HttpServlet {
                 out.close();
                 in.close();
             }
+        }
+
+        if(pathInfo.equals("/register")) {
+            BufferedReader in = req.getReader();
+            UserVO registerTryUser = gson.fromJson(in, UserVO.class);
+
+            UserVO registeredUser = userService.insertUser(registerTryUser);
+
+            if(registeredUser == null){
+                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "error");
+                PrintWriter out = resp.getWriter();
+                out.print(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+                in.close();
+            }
+
+            if(registeredUser != null) {
+                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "success", registeredUser);
+                PrintWriter out = resp.getWriter();
+                out.print(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+                in.close();
+            }
+
         }
     }
 

@@ -56,4 +56,20 @@ public class UserDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    public UserVO insertUser(UserVO registerTryUser) {
+        try {
+            // ✅ INSERT 실행
+            int insertedUserNum = sqlSession.insert("User.insertUser", registerTryUser);
+
+            if (insertedUserNum > 0) {
+                return registerTryUser; // ✅ INSERT된 유저 반환
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("유저 등록 실패: " + e.getMessage());
+            return null;
+        }
+    }
 }
