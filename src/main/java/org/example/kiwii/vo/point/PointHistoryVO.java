@@ -9,6 +9,7 @@ public class PointHistoryVO {
     private Timestamp createdAt;  // 생성일 (자동 설정)
     private Timestamp updatedAt;  // 업데이트일 (자동 설정)
     private Timestamp deletedAt;  // 삭제일 (NULL 허용)
+    private int uuid;         // 회원 고유번호 (USERS 테이블 FK)
 
     public PointHistoryVO() {}
 
@@ -71,6 +72,6 @@ public class PointHistoryVO {
         this.id = id;
     }
 
-    private int uuid;         // 회원 고유번호 (USERS 테이블 FK)
+
 }
 

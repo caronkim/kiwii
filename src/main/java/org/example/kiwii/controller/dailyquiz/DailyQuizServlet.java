@@ -95,6 +95,7 @@ public class DailyQuizServlet extends HttpServlet {
                     out.print(gson.toJson(response));
                     out.flush();
                     out.close();
+                    in.close();
 
                 }
             }catch (Exception e){

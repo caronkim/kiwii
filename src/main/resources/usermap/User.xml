@@ -35,5 +35,54 @@
         ]]>
     </select>
 
+    <select id="selectUserByAccountId"
+            parameterType="String"
+            resultType="org.example.kiwii.vo.user.UserVO"
+            resultMap="UserResultMap"
+    >
+        <![CDATA[
+        SELECT *
+        FROM USERS
+        WHERE ACCOUNT_ID = #{accountId}
+        ]]>
+    </select>
+
+    <select id="selectUserByUserUUID"
+            parameterType="Integer"
+            resultType="org.example.kiwii.vo.user.UserVO"
+            resultMap="UserResultMap"
+    >
+        <![CDATA[
+        SELECT *
+        FROM USERS
+        WHERE UUID = #{uuid}
+        ]]>
+    </select>
+    <select id="selectUserPointByUserUUID"
+            parameterType="Integer"
+            resultType="Integer"
+    >
+        <![CDATA[
+        SELECT POINT
+        FROM USERS
+        WHERE UUID = #{uuid}
+        ]]>
+    </select>
+    <update id="updateUserPointByUserUUID" parameterType="map">
+    <![CDATA[
+        UPDATE USERS
+        SET POINT = #{afterPoint}
+        WHERE UUID = #{uuid}
+        ]]>
+    </update>
+    <insert id="insertUser"
+            parameterType="org.example.kiwii.vo.user.UserVO"
+    >
+    <![CDATA[
+        INSERT INTO USERS (USERNAME, PASSWORD, ACCOUNT_ID, POINT, CREATED_AT, UPDATED_AT)
+        VALUES (#{username}, #{password}, #{accountId}, 0, SYSTIMESTAMP, SYSTIMESTAMP)
+        ]]>
+    </insert>
+
 
 </mapper>
