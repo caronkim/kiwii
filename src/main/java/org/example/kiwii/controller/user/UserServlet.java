@@ -38,6 +38,10 @@ public class UserServlet extends HttpServlet {
             }else {
                 ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "error");
 
+                PrintWriter out = resp.getWriter();
+                out.print(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
             }
 
         }

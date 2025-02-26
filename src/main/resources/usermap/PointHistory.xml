@@ -22,5 +22,14 @@
         WHERE UUID = #{userUUID}
         ]]>
     </select>
+    <insert id="insertPointHistory"
+            parameterType="org.example.kiwii.vo.point.PointHistoryVO"
+    >
+        <![CDATA[
+        INSERT INTO POINT_HISTORIES (CONTENT, AMOUNT, CREATED_AT, UPDATED_AT, UUID)
+        VALUES (#{content}, #{amount}, SYSTIMESTAMP, SYSTIMESTAMP, #{uuid})
+        ]]>
+    </insert>
+
 
 </mapper>

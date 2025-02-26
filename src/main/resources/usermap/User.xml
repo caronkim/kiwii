@@ -46,6 +46,23 @@
         WHERE UUID = #{uuid}
         ]]>
     </select>
+    <select id="selectUserPointByUserUUID"
+            parameterType="Integer"
+            resultType="Integer"
+    >
+        <![CDATA[
+        SELECT POINT
+        FROM USERS
+        WHERE UUID = #{uuid}
+        ]]>
+    </select>
+    <update id="updateUserPointByUserUUID" parameterType="map">
+    <![CDATA[
+        UPDATE USERS
+        SET POINT = #{afterPoint}
+        WHERE UUID = #{uuid}
+        ]]>
+    </update>
 
 
 </mapper>

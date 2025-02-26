@@ -25,4 +25,12 @@ public class PointDAO {
             return null;
         }
     }
+
+    public void insertPointHistory(PointHistoryVO pointHistoryVO) {
+        try{
+            sqlSession.insert("PointHistory.insertPointHistory", pointHistoryVO);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
