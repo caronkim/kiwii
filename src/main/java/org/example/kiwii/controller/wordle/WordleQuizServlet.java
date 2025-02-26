@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "wordleQuiz", value = "/wordle-quizzes")
+@WebServlet(name = "wordleQuiz", value = "/api/wordle-quizzes")
 public class WordleQuizServlet extends HttpServlet {
     // 현재 문제 가져오기
     @Override

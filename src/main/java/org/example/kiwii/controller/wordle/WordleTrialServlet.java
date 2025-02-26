@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "wordleTrial", value = "/wordle-trials")
+@WebServlet(name = "wordleTrial", value = "/api/wordle-trials")
 public class WordleTrialServlet extends HttpServlet {
     // wordle 시도 내용 가져오기
     @Override
