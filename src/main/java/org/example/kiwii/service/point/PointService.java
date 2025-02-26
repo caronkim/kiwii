@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PointService {
-    public List<PointHistoryVO> selectPointHistoryByUserUUID(String uuid) {
-        int parsedUUID = Integer.parseInt(uuid);
+    public List<PointHistoryVO> selectPointHistoryByUserUUID(int uuid) {
 
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
 
         PointDAO pointDAO = new PointDAO(sqlSession);
         List<PointHistoryVO> list = new ArrayList<>();
-        list = pointDAO.selectPointHistoryByUserUUID(parsedUUID);
+        list = pointDAO.selectPointHistoryByUserUUID(uuid);
+
+        sqlSession.close();
 
         return  list;
     }
