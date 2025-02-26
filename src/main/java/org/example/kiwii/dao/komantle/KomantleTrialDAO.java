@@ -1,7 +1,9 @@
 package org.example.kiwii.dao.komantle;
 
 import org.apache.ibatis.session.SqlSession;
+import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.vo.komantle.KomantleVO;
+import org.example.kiwii.vo.user.UserVO;
 
 public class KomantleTrialDAO {
     private final SqlSession sqlSession;
@@ -39,7 +41,11 @@ public class KomantleTrialDAO {
         }
     }
 
-    public void insertTrials(KomantleVO komantleVO) {
+    public void insertTrials(KomantleVO komantleVO, String word, String uuid) {
+
+        komantleVO.setUuid(uuid);
+        komantleVO.setWord(word);
+
         try {
             sqlSession.insert("KomantleTrial.insertTrials", komantleVO);
         } catch (Exception e) {
