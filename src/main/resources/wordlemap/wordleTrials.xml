@@ -44,6 +44,7 @@
         WHERE DELETED_AT IS NULL
           AND QUIZ_ID = #{quizId}
           AND UUID = #{userId}
+        ORDER BY ID
         ]]>
     </select>
     <insert id="insertWordleTrial" parameterType="org.example.kiwii.vo.wordle.WordleTrialVO" useGeneratedKeys="true"
