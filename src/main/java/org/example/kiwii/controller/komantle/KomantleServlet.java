@@ -3,7 +3,6 @@ package org.example.kiwii.controller.komantle;
 import com.google.gson.Gson;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.dao.komantle.KomantleTrialDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.vo.komantle.KomantleVO;
@@ -17,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/komantle")
+@WebServlet("/kimantle")
 public class KomantleServlet extends HttpServlet {
 
     private SqlSessionFactory sqlSessionFactory;
@@ -31,6 +30,11 @@ public class KomantleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        // CORS 설정 추가
+        response.setHeader("Access-Control-Allow-Origin", "*"); // 모든 도메인 허용 (배포 시 특정 도메인으로 변경)
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
         String userWord = request.getParameter("word");
         String uuid = request.getParameter("uuid");
 
