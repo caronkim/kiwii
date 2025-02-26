@@ -70,6 +70,7 @@ public class UserServlet extends HttpServlet {
                 out.print(gson.toJson(apiResponse));
                 out.flush();
                 out.close();
+                in.close();
 
             }else {
                 ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "login fail");
@@ -78,6 +79,7 @@ public class UserServlet extends HttpServlet {
                 out.print(gson.toJson(apiResponse));
                 out.flush();
                 out.close();
+                in.close();
             }
         }
     }

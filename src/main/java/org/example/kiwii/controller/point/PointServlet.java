@@ -52,6 +52,41 @@ public class PointServlet extends HttpServlet {
                 out.write(gson.toJson(apiResponse));
                 out.flush();
                 out.close();
+                in.close();
+
+
+            }
+        }
+
+        if (pathInfo.equals("/use")) {
+            BufferedReader in = req.getReader();
+
+            PointHistoryVO pointHistoryVO = gson.fromJson(in, PointHistoryVO.class);
+
+            Integer afterPoint = userService.usePointByUserUUID(pointHistoryVO);
+
+            if (afterPoint == null) {
+                ApiResponse<Object> apiResponse = new ApiResponse<>(200, "wrong user");
+                PrintWriter out = resp.getWriter();
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            } else if (afterPoint < 0) {
+                ApiResponse<Object> apiResponse = new ApiResponse<>(200, "not enough point");
+                PrintWriter out = resp.getWriter();
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            } else {
+                Map<String, Object> data = new HashMap<>();
+                data.put("afterPoint", afterPoint);
+                ApiResponse<Map<String,Object>> apiResponse = new ApiResponse<>(200, "success", data);
+
+                PrintWriter out = resp.getWriter();
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+                in.close();
 
 
             }

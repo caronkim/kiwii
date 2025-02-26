@@ -52,22 +52,61 @@ public class UserService {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         UserDAO userDAO = new UserDAO(sqlSession);
         PointDAO pointDAO = new PointDAO(sqlSession);
-        Integer beforePoint = userDAO.selectUserPointByUserUUID(pointHistoryVO.getUuid());
-        if(beforePoint == null){
-            sqlSession.close();
-            return null;
-        } else {
+
+        try {
+            Integer beforePoint = userDAO.selectUserPointByUserUUID(pointHistoryVO.getUuid());
+
+            if (beforePoint == null) {
+                return null;  // 사용자 정보 없음
+            }
+
             int afterPoint = beforePoint + pointHistoryVO.getAmount();
-            //  user point update
+
+            // ✅ user point update
             userDAO.updateUserPointByUserUUID(pointHistoryVO.getUuid(), afterPoint);
-            //  point history update
+            // ✅ point history insert
             pointDAO.insertPointHistory(pointHistoryVO);
-            sqlSession.commit();
-            sqlSession.close();
+            sqlSession.commit(); // ✅ 커밋
 
             return afterPoint;
-
+        } catch (Exception e) {
+            sqlSession.rollback(); // ✅ 예외 발생 시 롤백
+            throw new RuntimeException("포인트 적립 중 오류 발생: " + e.getMessage(), e);
+        } finally {
+            sqlSession.close(); // ✅ 중복 close 제거
         }
-
     }
+
+
+    public Integer usePointByUserUUID(PointHistoryVO pointHistoryVO) {
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        UserDAO userDAO = new UserDAO(sqlSession);
+        PointDAO pointDAO = new PointDAO(sqlSession);
+
+        try {
+            Integer beforePoint = userDAO.selectUserPointByUserUUID(pointHistoryVO.getUuid());
+
+            if (beforePoint == null) {
+                return null;  // 사용자 정보 없음
+            }
+
+            int afterPoint = beforePoint + pointHistoryVO.getAmount();
+
+            if (afterPoint < 0) {
+                return afterPoint;  // 포인트 부족
+            }
+
+            userDAO.updateUserPointByUserUUID(pointHistoryVO.getUuid(), afterPoint);
+            pointDAO.insertPointHistory(pointHistoryVO);
+            sqlSession.commit();
+
+            return afterPoint;
+        } catch (Exception e) {
+            sqlSession.rollback(); // ✅ 예외 발생 시 롤백
+            throw new RuntimeException("포인트 사용 중 오류 발생: " + e.getMessage(), e);
+        } finally {
+            sqlSession.close(); // ✅ 중복 close() 제거
+        }
+    }
+
 }
