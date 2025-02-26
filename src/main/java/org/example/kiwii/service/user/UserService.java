@@ -126,4 +126,35 @@ public class UserService {
             sqlSession.close(); // ✅ 중복 close() 제거
         }
     }
+
+    public UserVO selectUserByUsername(String enteredUsername) {
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        UserDAO userDAO = new UserDAO(sqlSession);
+
+        UserVO selectedUser = userDAO.selectUserByUsername(enteredUsername);
+
+        if(selectedUser == null){
+            sqlSession.close();
+            return null;
+        } else {
+            sqlSession.close();
+            return selectedUser;
+        }
+
+    }
+
+    public UserVO selectUserByAccountId(String enteredAccountId) {
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        UserDAO userDAO = new UserDAO(sqlSession);
+
+        UserVO selectedUser = userDAO.selectUserByAccountId(enteredAccountId);
+
+        if(selectedUser == null){
+            sqlSession.close();
+            return null;
+        } else {
+            sqlSession.close();
+            return selectedUser;
+        }
+    }
 }

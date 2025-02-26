@@ -35,6 +35,18 @@
         ]]>
     </select>
 
+    <select id="selectUserByAccountId"
+            parameterType="String"
+            resultType="org.example.kiwii.vo.user.UserVO"
+            resultMap="UserResultMap"
+    >
+        <![CDATA[
+        SELECT *
+        FROM USERS
+        WHERE ACCOUNT_ID = #{accountId}
+        ]]>
+    </select>
+
     <select id="selectUserByUserUUID"
             parameterType="Integer"
             resultType="org.example.kiwii.vo.user.UserVO"

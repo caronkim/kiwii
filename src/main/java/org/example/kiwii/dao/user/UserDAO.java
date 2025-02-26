@@ -72,4 +72,15 @@ public class UserDAO {
             return null;
         }
     }
+
+    public UserVO selectUserByAccountId(String enteredAccountId) {
+        UserVO userVO = null;
+        try{
+            userVO = sqlSession.selectOne("User.selectUserByAccountId", enteredAccountId);
+            return userVO;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return userVO;
+        }
+    }
 }

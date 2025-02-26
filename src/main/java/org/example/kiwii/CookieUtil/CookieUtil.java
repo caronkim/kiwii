@@ -45,6 +45,14 @@ public class CookieUtil {
         resp.addCookie(cookie);
     }
 
+    public static void deleteCookie(HttpServletResponse resp, String name) {
+        Cookie cookie = new Cookie(name, "");
+        cookie.setHttpOnly(true); // JS 접근 방지 유지
+        cookie.setMaxAge(0); // 즉시 만료
+        cookie.setPath("/"); // 기존 쿠키와 동일한 경로 설정 (중요)
+        resp.addCookie(cookie);
+    }
+
     public static boolean isLoginUser(HttpServletRequest req, int uuid) {
         String uuidFromCookie = getCookieValue(req, "uuid");
         String parsedUUID = Integer.toString(uuid);
