@@ -4,6 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.vo.user.UserVO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserDAO {
@@ -81,6 +82,17 @@ public class UserDAO {
         }catch (Exception e){
             System.out.println(e.getMessage());
             return userVO;
+        }
+    }
+
+    public List<UserVO> selectUserByRank() {
+        List<UserVO> userVOList = null;
+        try{
+            userVOList = sqlSession.selectList("User.selectUserByRank");
+            return userVOList;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return userVOList;
         }
     }
 }
