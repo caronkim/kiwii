@@ -61,9 +61,8 @@
         SELECT word, rank, cos_sim, uuid
         FROM KOMANTLE_TRIALS
         WHERE uuid = #{uuid}
-            AND TRUNC(CREATED_AT) = CURDATE()
+            AND TRUNC(CREATED_AT) = TRUNC(SYSDATE)
         ORDER BY try_seq DESC
-        LIMIT 10;
     </select>
 
 </mapper>
