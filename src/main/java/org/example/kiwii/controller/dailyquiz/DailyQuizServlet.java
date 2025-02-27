@@ -32,8 +32,10 @@ public class DailyQuizServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
 
-        if (pathInfo.equals("/todayquiz")) {
+        if (pathInfo.equals("/today-quiz")) {
+
             List<DailyQuizVO> list = DailyQuizService.getTodayQuiz();
+
             if (list != null) {
                 ApiResponse<List<DailyQuizVO>> response = new ApiResponse<>(200, "success", list);
 
