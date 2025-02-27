@@ -7,6 +7,7 @@
     <!-- CDATA 는 SQL query 내부의 특수문자(<>)가 tag로 인식되지 않도록 처리 -->
     <resultMap id="UserResultMap" type="org.example.kiwii.vo.user.UserVO">
         <result column="ACCOUNT_ID" property="accountId"/>
+        <result column="TOTAL_EARNED_POINTS" property="totalEarnedPoints"/>
         <result column="CREATED_AT" property="createdAt"/>
         <result column="UPDATED_AT" property="updatedAt"/>
         <result column="DELETED_AT" property="deletedAt"/>
@@ -20,6 +21,16 @@
         <![CDATA[
         SELECT *
         FROM USERS
+        ]]>
+    </select>
+    <select id="selectUserByRank"
+            resultType="org.example.kiwii.vo.user.UserVO"
+            resultMap="UserResultMap"
+    >
+        <![CDATA[
+        SELECT *
+        FROM USERS
+        ORDER BY TOTAL_EARNED_POINTS DESC
         ]]>
     </select>
 

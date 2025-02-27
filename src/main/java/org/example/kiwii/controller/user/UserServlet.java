@@ -3,6 +3,7 @@ package org.example.kiwii.controller.user;
 import com.google.gson.Gson;
 import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.dto.ApiResponse;
+import org.example.kiwii.dto.user.UserRankDTO;
 import org.example.kiwii.service.user.UserService;
 import org.example.kiwii.vo.user.UserVO;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet("/api/user/*")
@@ -67,6 +69,18 @@ public class UserServlet extends HttpServlet {
 
             // ✅ 로그아웃 메시지 응답
             ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "success");
+            PrintWriter out = resp.getWriter();
+            out.print(gson.toJson(apiResponse));
+            out.flush();
+            out.close();
+
+        }
+
+        if(pathInfo.equals("/daily-rank")) {
+            List<UserRankDTO> rankedUser = userService.selectUserByRank();
+
+            ApiResponse<List<UserRankDTO>> apiResponse = new ApiResponse<>(200, "success", rankedUser);
+
             PrintWriter out = resp.getWriter();
             out.print(gson.toJson(apiResponse));
             out.flush();
