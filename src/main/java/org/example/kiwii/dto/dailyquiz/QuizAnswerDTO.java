@@ -4,6 +4,8 @@ public class QuizAnswerDTO {
     private int userId;
     private int correctAnswer;
 
+    public QuizAnswerDTO() {}
+
     public QuizAnswerDTO(int userId, int correctAnswer) {
         this.userId = userId;
         this.correctAnswer = correctAnswer;
