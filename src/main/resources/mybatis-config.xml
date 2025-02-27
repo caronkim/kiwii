@@ -20,7 +20,7 @@
         <typeAlias type="org.example.kiwii.vo.wordle.WordleQuizVO" alias="WordleQuiz"/>
         <typeAlias type="org.example.kiwii.vo.wordle.WordleTrialVO" alias="WordleTrial"/>
         <typeAlias type="org.example.kiwii.vo.wordle.WordleWordVO" alias="WordleWord"/>
-        <typeAlias type="oorg.example.kiwii.vo.Komantle.KomantleVO" alias="KomantleVO"/>
+        <typeAlias type="org.example.kiwii.vo.kimantle.KimantleVO" alias="KimantleVO"/>
     </typeAliases>
 
     <!--  DB 연결 정보  -->
@@ -51,5 +51,6 @@
         <mapper resource="dailyquizmap/DailyQuiz.xml"/>
         <mapper resource="usermap/User.xml"/>
         <mapper resource="usermap/PointHistory.xml"/>
+        <mapper resource="./kimantlemap/KimantleTrial.xml"/>
     </mappers>
 </configuration>

@@ -1,22 +1,22 @@
-package org.example.kiwii.vo.komantle;
+package org.example.kiwii.vo.kimantle;
 
-public class KomantleVO {
+public class KimantleVO {
     private String word;
     private int rank;
     private double cosineSimilarity;
     private String uuid;
 
-    public KomantleVO() {
+    public KimantleVO() {
     }
 
-    public KomantleVO(String word, int rank, double cosineSimilarity, String uuid) {
+    public KimantleVO(String word, int rank, double cosineSimilarity, String uuid) {
         this.word = word;
         this.rank = rank;
         this.cosineSimilarity = cosineSimilarity;
         this.uuid = uuid;
     }
 
-    public KomantleVO(int rank, double cosineSimilarity) {
+    public KimantleVO(int rank, double cosineSimilarity) {
         this.rank = rank;
         this.cosineSimilarity = cosineSimilarity;
     }
