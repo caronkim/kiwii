@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="KomantleTrial">
+<mapper namespace="KimantleTrial">
     <!-- CDATA 는 SQL query 내부의 특수문자(<>)가 tag로 인식되지 않도록 처리 -->
-    <select id="selectCosineSimilarity" parameterType="String" resultType="KomantleVO">
+    <select id="selectCosineSimilarity" parameterType="String" resultType="KimantleVO">
         <![CDATA[
         SELECT rank,
                cos_sim as cosineSimilarity
@@ -43,17 +43,27 @@
             word,
             CASE
                 WHEN word = #{word} THEN 0
-                ELSE ranking
+                ELSE ranking - 1
                 END AS rank,
             similarity
         FROM ranked_words;
         ]]>
     </insert>
 
-    <insert id="insertTrials" parameterType="KomantleVO">
+    <insert id="insertTrials" parameterType="KimantleVO">
         <![CDATA[
         INSERT INTO KOMANTLE_TRIALS (word, rank, cos_sim, uuid)
         VALUES (#{word}, #{rank}, #{cosineSimilarity}, #{uuid})
         ]]>
     </insert>
+
+    <select id="getRecentTrials" parameterType="String" resultType="KimantleVO">
+        SELECT word, rank, cos_sim, uuid
+        FROM KOMANTLE_TRIALS
+        WHERE uuid = #{uuid}
+            AND DATE(CREATED_AT) = CURDATE()
+        ORDER BY try_seq DESC
+        LIMIT 10;
+    </select>
+
 </mapper>
