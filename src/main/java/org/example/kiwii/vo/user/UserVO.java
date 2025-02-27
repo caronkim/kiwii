@@ -10,7 +10,8 @@ public class UserVO {
     private int point;     // 포인트 (기본값 0)
     private Timestamp createdAt;  // 생성일 (자동 설정)
     private Timestamp updatedAt;  // 업데이트일 (자동 설정)
-    private Timestamp deletedAt;  // 삭제일 (NULL 허용)
+    private Timestamp deletedAt;
+    private int totalEarnedPoints;// 삭제일 (NULL 허용)
 
     public UserVO() {}
 
@@ -88,6 +89,13 @@ public class UserVO {
 
     public void setDeletedAt(Timestamp deletedAt) {
         this.deletedAt = deletedAt;
+    }
+    public int getTotalEarnedPoints() {
+        return totalEarnedPoints;
+    }
+
+    public void setTotalEarnedPoints(int totalEarnedPoints) {
+        this.totalEarnedPoints = totalEarnedPoints;
     }
 }
 

@@ -3,9 +3,13 @@ package org.example.kiwii.service.user;
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.dao.point.PointDAO;
 import org.example.kiwii.dao.user.UserDAO;
+import org.example.kiwii.dto.user.UserRankDTO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.vo.point.PointHistoryVO;
 import org.example.kiwii.vo.user.UserVO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserService {
 
@@ -121,7 +125,7 @@ public class UserService {
 
         } catch (Exception e){
             sqlSession.rollback(); // ✅ 예외 발생 시 롤백
-            throw new RuntimeException("포인트 사용 중 오류 발생: " + e.getMessage(), e);
+            throw new RuntimeException("유저 생성 중 오류 발생: " + e.getMessage(), e);
         } finally {
             sqlSession.close(); // ✅ 중복 close() 제거
         }
@@ -156,5 +160,32 @@ public class UserService {
             sqlSession.close();
             return selectedUser;
         }
+    }
+
+    public List<UserRankDTO> selectUserByRank() {
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        UserDAO userDAO = new UserDAO(sqlSession);
+        List<UserVO> rankedUser = userDAO.selectUserByRank();
+        if (rankedUser == null) {
+            sqlSession.close();
+            return null;
+        } else {
+            sqlSession.close();
+            List<UserRankDTO> userRankDTOList = new ArrayList<UserRankDTO>();
+            int rank = 1;
+            for (UserVO userVO : rankedUser) {
+                if(rank > 11)
+                    break;
+                UserRankDTO userDTO = new UserRankDTO(
+                        userVO.getUsername(),
+                        userVO.getTotalEarnedPoints(),
+                        rank
+                );
+                userRankDTOList.add(userDTO);
+                rank++;
+            }
+            return userRankDTOList;
+        }
+
     }
 }
