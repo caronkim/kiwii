@@ -39,7 +39,7 @@ public class CookieUtil {
 
     public static void setCookie(HttpServletResponse resp, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true); // JS 접근 방지 (보안 강화)
+        // cookie.setHttpOnly(true); // JS 접근 방지 (보안 강화)
         cookie.setMaxAge(maxAge); // 30분 (1800초)
         cookie.setPath("/"); // 모든 경로에서 접근 가능
         resp.addCookie(cookie);
@@ -47,7 +47,7 @@ public class CookieUtil {
 
     public static void deleteCookie(HttpServletResponse resp, String name) {
         Cookie cookie = new Cookie(name, "");
-        cookie.setHttpOnly(true); // JS 접근 방지 유지
+        // cookie.setHttpOnly(true); // JS 접근 방지 유지
         cookie.setMaxAge(0); // 즉시 만료
         cookie.setPath("/"); // 기존 쿠키와 동일한 경로 설정 (중요)
         resp.addCookie(cookie);
