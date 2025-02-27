@@ -1,18 +1,19 @@
-package org.example.kiwii.dao.komantle;
+package org.example.kiwii.dao.kimantle;
 
 import org.apache.ibatis.session.SqlSession;
-import org.example.kiwii.CookieUtil.CookieUtil;
-import org.example.kiwii.vo.komantle.KomantleVO;
-import org.example.kiwii.vo.user.UserVO;
+import org.example.kiwii.vo.kimantle.KimantleVO;
 
-public class KomantleTrialDAO {
+import java.util.ArrayList;
+import java.util.List;
+
+public class KimantleTrialDAO {
     private final SqlSession sqlSession;
 
-    public KomantleTrialDAO(SqlSession sqlSession) {
+    public KimantleTrialDAO(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
 
-    public KomantleVO tryAnswer(String word) {
+    public KimantleVO tryAnswer(String word) {
         try {
             return sqlSession.selectOne("KomantleTrial.selectCosineSimilarity", word);
         } catch (Exception e) {
@@ -41,16 +42,25 @@ public class KomantleTrialDAO {
         }
     }
 
-    public void insertTrials(KomantleVO komantleVO, String word, String uuid) {
-
-        komantleVO.setUuid(uuid);
-        komantleVO.setWord(word);
+    public void insertTrials(KimantleVO kimantleVO, String word, String uuid) {
+        kimantleVO.setUuid(uuid);
+        kimantleVO.setWord(word);
 
         try {
-            sqlSession.insert("KomantleTrial.insertTrials", komantleVO);
+            sqlSession.insert("KomantleTrial.insertTrials", kimantleVO);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
+        }
+    }
+
+    public List<KimantleVO> getRecentTrials(String uuid) {
+        try {
+            return sqlSession.selectList("KimantleTrial.getRecentTrials", uuid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("getRecentTrials 실행 중 오류 발생: " + e.getMessage());
+//            return new ArrayList<>();
         }
     }
 }
