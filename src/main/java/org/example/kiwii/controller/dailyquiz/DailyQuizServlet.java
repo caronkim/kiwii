@@ -81,18 +81,15 @@ public class DailyQuizServlet extends HttpServlet {
             }
 
             try {
-                // quiz 정답갯수 로딩
-                QuizAnswerDTO answerDTO = new QuizAnswerDTO();
-                answerDTO.setUserId(loginUser.getUuid());
-                answerDTO.setCorrectAnswer(correctAnswer);
+
 
                 // 한 문제 당 5 포인트
-                point += answerDTO.getCorrectAnswer() * 5;
+                point += correctAnswer * 5;
 
 
-                // PointHistoryVO 에 answerDTO 에서 받아온 값을 받아 전달
+                // PointHistoryVO 에 받아온 값을 받아 전달
                 PointHistoryVO pointHistoryVO = new PointHistoryVO();
-                pointHistoryVO.setUuid(answerDTO.getUserId());
+                pointHistoryVO.setUuid(loginUser.getUuid());
                 pointHistoryVO.setAmount(point);
                 pointHistoryVO.setContent("퀴즈 정답");
 
@@ -112,7 +109,7 @@ public class DailyQuizServlet extends HttpServlet {
                     // 포인트 제공 후 포인트 반환
                     Integer afterPoint = userService.depositPointByUserUUID(pointHistoryVO);
 
-                    ApiResponse<Object> response = new ApiResponse<>(200, "success", afterPoint);
+                    ApiResponse<Object> response = new ApiResponse<>(200, "success", point);
                     PrintWriter out = resp.getWriter();
                     out.print(gson.toJson(response));
                     out.flush();
