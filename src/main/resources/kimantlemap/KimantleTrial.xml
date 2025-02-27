@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="KimantleTrial">
+    <!-- CDATA 는 SQL query 내부의 특수문자(<>)가 tag로 인식되지 않도록 처리 -->
+    <select id="selectCosineSimilarity" parameterType="String" resultType="KimantleVO">
+        <![CDATA[
+        SELECT rank,
+               cos_sim as cosineSimilarity
+        FROM KOMANTLE_WORD_RANK_TABLE
+        WHERE TRUNC(CREATED_AT) = TRUNC(SYSDATE)
+            AND word = #{word}
+        ]]>
+    </select>
+
+    <select id="isWord" parameterType="String" resultType="boolean">
+        <![CDATA[
+        SELECT *
+        FROM EMBEDDING_TABLE
+        WHERE word = #{word}
+        ]]>
+    </select>
+
+    <insert id="insertTodayWord" parameterType="String">
+        <![CDATA[
+        INSERT INTO KOMANTLE_WORD_RANK_TABLE (word, rank, cosine_similarity)
+        WITH word_sim AS (
+            SELECT
+                e1.word AS word,
+                cosine_similarity(#{word}, e1.word) AS similarity
+            FROM EMBEDDING_TABLE e1
+        ),
+             ranked_words AS (
+                 SELECT
+                     word,
+                     similarity,
+                     RANK() OVER (ORDER BY similarity DESC) AS ranking
+                 FROM word_sim
+             )
+        SELECT
+            word,
+            CASE
+                WHEN word = #{word} THEN 0
+                ELSE ranking - 1
+                END AS rank,
+            similarity
+        FROM ranked_words;
+        ]]>
+    </insert>
+
+    <insert id="insertTrials" parameterType="KimantleVO">
+        <![CDATA[
+        INSERT INTO KOMANTLE_TRIALS (word, rank, cos_sim, uuid)
+        VALUES (#{word}, #{rank}, #{cosineSimilarity}, #{uuid})
+        ]]>
+    </insert>
+
+    <select id="getRecentTrials" parameterType="String" resultType="KimantleVO">
+        SELECT word, rank, cos_sim, uuid
+        FROM KOMANTLE_TRIALS
+        WHERE uuid = #{uuid}
+            AND TRUNC(CREATED_AT) = CURDATE()
+        ORDER BY try_seq DESC
+        LIMIT 10;
+    </select>
+
+</mapper>
