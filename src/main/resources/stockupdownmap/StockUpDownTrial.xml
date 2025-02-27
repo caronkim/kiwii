@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="StockUpDownTrial">
+<mapper namespace="StockUpDown">
     <insert id="insertStockUpDownTrial" parameterType="StockUpDownVO">
         <![CDATA[
         INSERT INTO PREDICT_STOCK_TRIALS (ID, USER_ANSWER, PREDICT_GAME_ID, UUID)
@@ -11,6 +11,32 @@
         ]]>
     </insert>
 
+    <insert id="insertStockUpDownTrialResult">
+        <![CDATA[
+        INSERT INTO PREDICT_STOCK_LOG (ID, IS_COR)
+        SELECT
+            t.ID AS TRIAL_ID,
+            CASE
+                WHEN s.TODAY_CLOSE >= s.PREV_CLOSE AND t.USER_ANSWER = 'O' THEN 1
+                WHEN s.TODAY_CLOSE < s.PREV_CLOSE AND t.USER_ANSWER = 'X' THEN 1
+                ELSE 0
+                END AS IS_COR
+        FROM PREDICT_STOCK_TRIALS t
+        LEFT JOIN PREDICT_STOCK s
+            ON t.PREDICT_GAME_ID = s.PREDICT_GAME_ID
+        WHERE TRUNC(t.CREATED_AT) = TRUNC(SYSDATE - 1)
+        ]]>
+    </insert>
 
-
+    <select id="selectStockUpDownByUUID" parameterType="String" resultType="StockUpDownVO">
+        <![CDATA[
+        SELECT
+            ID AS id,
+            USER_ANSWER AS userAnswer,
+            PREDICT_GAME_ID AS predictGameId,
+            UUID AS uuid
+        FROM PREDICT_STOCK_TRIALS
+        WHERE UUID = #{uuid}
+        ]]>
+    </select>
 </mapper>
