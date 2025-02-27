@@ -3,6 +3,7 @@ package org.example.kiwii.controller.kimantle;
 import com.google.gson.Gson;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.dao.kimantle.KimantleTrialDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.vo.kimantle.KimantleVO;
@@ -37,7 +38,7 @@ public class KimantleServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         String userWord = request.getParameter("word");
-        String uuid = request.getParameter("uuid");
+        String uuid = CookieUtil.getCookieValue(request, "uuid");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -69,7 +70,7 @@ public class KimantleServlet extends HttpServlet {
                     sqlSession.commit(); // 트랜잭션 반영
                     jsonResponse.put("status", "success");
                 } else {
-                    jsonResponse.put("status", "error");
+                    jsonResponse.put("status", "fail");
                     jsonResponse.put("message", "단어가 오늘의 순위에 없습니다.");
                 }
             }
