@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/kimantle")
+@WebServlet("/api/kimantle")
 public class KimantleServlet extends HttpServlet {
 
     private SqlSessionFactory sqlSessionFactory;
@@ -114,7 +114,7 @@ public class KimantleServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jsonResponse.put("status", "error");
             jsonResponse.put("message", e.getMessage());  // 🔥 예외 메시지를 반환
-            e.printStackTrace(); // 콘솔에 로그 출력
+//            e.printStackTrace(); // 콘솔에 로그 출력
         }
 
         out.print(gson.toJson(jsonResponse));
