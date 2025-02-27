@@ -57,7 +57,7 @@ public class DailyQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
 
-        if (pathInfo.equals("/submit")) {
+        if (pathInfo.equals("/today-quiz")) {
             //{
             //  "correctAnswer": 2
             //} 로 데이터가 넘어옴

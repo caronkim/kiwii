@@ -20,6 +20,7 @@
         SELECT *
         FROM POINT_HISTORIES
         WHERE UUID = #{userUUID}
+        ORDER BY ID DESC
         ]]>
     </select>
     <insert id="insertPointHistory"
