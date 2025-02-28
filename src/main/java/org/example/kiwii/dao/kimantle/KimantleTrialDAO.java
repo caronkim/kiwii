@@ -57,4 +57,13 @@ public class KimantleTrialDAO {
             throw new RuntimeException("getRecentTrials 실행 중 오류 발생: " + e.getMessage());
         }
     }
+
+    public Integer getTrialCnt(String uuid) {
+        try {
+            return sqlSession.selectOne("KimantleTrial.getTrialCnt", uuid);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }

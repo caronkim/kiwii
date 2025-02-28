@@ -84,4 +84,13 @@
         ]]>
     </select>
 
+    <select id="getTrialCnt" parameterType="String" resultType="Integer">
+        <![CDATA[
+        SELECT count(word) cnt
+        FROM KOMANTLE_TRIALS
+        WHERE uuid = #{uuid}
+          AND TRUNC(CREATED_AT) = TRUNC(SYSDATE)
+        ]]>
+    </select>
+
 </mapper>

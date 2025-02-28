@@ -3,7 +3,10 @@ package org.example.kiwii.controller.kimantle;
 import com.google.gson.Gson;
 import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.service.kimantle.KimantleService;
+import org.example.kiwii.service.point.PointService;
+import org.example.kiwii.service.user.UserService;
 import org.example.kiwii.vo.kimantle.KimantleVO;
+import org.example.kiwii.vo.point.PointHistoryVO;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +24,7 @@ import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
 @WebServlet("/api/kimantle")
 public class KimantleServlet extends HttpServlet {
 
+    private final UserService userService = new UserService();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -53,7 +57,7 @@ public class KimantleServlet extends HttpServlet {
             jsonResponse.put("message", "단어가 사전에 없습니다. 다시 입력해주세요.");
         } else {
             // 2. 유사도 및 순위 조회
-            KimantleVO result = kimantleService.tryAnswer(userWord);
+            KimantleVO result = kimantleService.tryAnswer(userWord, Integer.parseInt(uuid));
 
             if (result != null) {
                 jsonResponse.put("rank", result.getRank());
@@ -62,6 +66,15 @@ public class KimantleServlet extends HttpServlet {
                 // 3. 입력 로그 저장
                 kimantleService.insertTrials(result, userWord, uuid);
                 jsonResponse.put("status", "success");
+
+                if (result.getRank() == 0) {
+                    PointService pointService = new PointService();
+                    List<PointHistoryVO> pointHistory = pointService.selectPointHistoryByUserUUID(Integer.parseInt(uuid));
+                    int point = pointHistory.get(0).getAmount();
+                    jsonResponse.put("point", point);
+                }
+
+
             } else {
                 jsonResponse.put("status", "fail");
                 jsonResponse.put("message", "단어가 오늘의 순위에 없습니다.");
