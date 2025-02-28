@@ -15,7 +15,7 @@
         ]]>
     </select>
 
-    <select id="isWord" parameterType="String" resultType="boolean">
+    <select id="isWord" parameterType="String" resultType="KimantleVO">
         <![CDATA[
         SELECT *
         FROM EMBEDDING_TABLE

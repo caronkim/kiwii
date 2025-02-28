@@ -23,7 +23,8 @@ public class KimantleTrialDAO {
 
     public boolean isWord(String word) {
         try {
-            return sqlSession.selectOne("KimantleTrial.isWord", word) != null;
+            KimantleVO result = sqlSession.selectOne("KimantleTrial.isWord", word);
+            return result != null;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
