@@ -83,8 +83,8 @@ public class DailyQuizServlet extends HttpServlet {
             try {
 
 
-                // 한 문제 당 5 포인트
-                point += correctAnswer * 5;
+                // 한 문제 당 25 포인트
+                point += correctAnswer * 25;
 
 
                 // PointHistoryVO 에 받아온 값을 받아 전달
