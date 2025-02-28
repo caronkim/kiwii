@@ -23,7 +23,6 @@ import java.util.Map;
 public class KimantleServlet extends HttpServlet {
 
     private SqlSessionFactory sqlSessionFactory;
-    private KimantleTrialDAO kimantleTrialDAO;
 
     @Override
     public void init() {
@@ -95,7 +94,7 @@ public class KimantleServlet extends HttpServlet {
         Map<String, Object> jsonResponse = new HashMap<>();
 
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
+            KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
 
             if (uuid == null || uuid.isEmpty()) {
                 jsonResponse.put("status", "fail");
