@@ -52,8 +52,13 @@
 
     <insert id="insertTrials" parameterType="KimantleVO">
         <![CDATA[
-        INSERT INTO KOMANTLE_TRIALS (word, rank, cos_sim, uuid)
-        VALUES (#{word}, #{rank}, #{cosineSimilarity}, #{uuid})
+        INSERT INTO KOMANTLE_TRIALS (word, rank, cos_sim, uuid, try_seq)
+        VALUES (#{word}, #{rank}, #{cosineSimilarity}, #{uuid},
+                (SELECT NVL(MAX(try_seq), 0) + 1
+                 FROM KOMANTLE_TRIALS
+                 WHERE uuid = #{uuid}
+                    AND TRUNC(CREATED_AT) = TRUNC(SYSDATE) )
+               )
         ]]>
     </insert>
 
