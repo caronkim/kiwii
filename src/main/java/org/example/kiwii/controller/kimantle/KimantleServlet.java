@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.dao.kimantle.KimantleTrialDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
+import org.example.kiwii.service.kimantle.KimantleService;
 import org.example.kiwii.vo.kimantle.KimantleVO;
 
 import javax.servlet.annotation.WebServlet;
@@ -45,40 +46,33 @@ public class KimantleServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         Map<String, Object> jsonResponse = new HashMap<>();
+        KimantleService kimantleService = new KimantleService();
 
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
 
-            // 1. 입력한 단어가 사전에 있는지 확인
-            boolean exists = kimantleTrialDAO.isWord(userWord);
-            jsonResponse.put("exists", exists);
+        // 1. 입력한 단어가 사전에 있는지 확인
+        boolean exists = kimantleService.isWord(userWord);
+        jsonResponse.put("exists", exists);
 
-            if (!exists) {
-                // 사전에 없는 단어일 경우 클라이언트에게 알림
-                jsonResponse.put("status", "fail");
-                jsonResponse.put("message", "단어가 사전에 없습니다. 다시 입력해주세요.");
+        if (!exists) {
+            // 사전에 없는 단어일 경우 클라이언트에게 알림
+            jsonResponse.put("status", "fail");
+            jsonResponse.put("message", "단어가 사전에 없습니다. 다시 입력해주세요.");
+        } else {
+            // 2. 유사도 및 순위 조회
+            KimantleVO result = kimantleService.tryAnswer(userWord);
+
+            if (result != null) {
+                jsonResponse.put("rank", result.getRank());
+                jsonResponse.put("similarity", result.getCosineSimilarity());
+
+                // 3. 입력 로그 저장
+                kimantleService.insertTrials(result, userWord, uuid);
+                jsonResponse.put("status", "success");
             } else {
-                // 2. 유사도 및 순위 조회
-                KimantleVO result = kimantleTrialDAO.tryAnswer(userWord);
-
-                if (result != null) {
-                    jsonResponse.put("rank", result.getRank());
-                    jsonResponse.put("similarity", result.getCosineSimilarity());
-
-                    // 3. 입력 로그 저장
-                    kimantleTrialDAO.insertTrials(result, userWord, uuid);
-                    sqlSession.commit(); // 트랜잭션 반영
-                    jsonResponse.put("status", "success");
-                } else {
-                    jsonResponse.put("status", "fail");
-                    jsonResponse.put("message", "단어가 오늘의 순위에 없습니다.");
-                }
+                jsonResponse.put("status", "fail");
+                jsonResponse.put("message", "단어가 오늘의 순위에 없습니다.");
             }
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            jsonResponse.put("status", "error");
-            jsonResponse.put("message", e.getMessage());
-        }
+       }
 
         // Gson을 사용하여 Map을 JSON 문자열로 변환
         out.print(gson.toJson(jsonResponse));
