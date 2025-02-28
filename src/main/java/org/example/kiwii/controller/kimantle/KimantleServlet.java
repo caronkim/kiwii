@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -34,18 +35,21 @@ public class KimantleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        // CORS 설정 추가
-        response.setHeader("Access-Control-Allow-Origin", "*"); // 모든 도메인 허용 (배포 시 특정 도메인으로 변경)
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-        String userWord = request.getParameter("word");
+        BufferedReader reader = request.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String json = jsonBuilder.toString();
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(json, Map.class);
+        String userWord = (String) map.get("word");
         String uuid = CookieUtil.getCookieValue(request, "uuid");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
         Map<String, Object> jsonResponse = new HashMap<>();
         KimantleService kimantleService = new KimantleService();
 
@@ -83,10 +87,6 @@ public class KimantleServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        // CORS 설정 추가
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         String uuid = getCookieValue(request, "uuid");
         response.setContentType("application/json");
