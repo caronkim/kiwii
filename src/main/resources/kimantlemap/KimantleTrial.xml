@@ -66,7 +66,9 @@
         <![CDATA[
         SELECT *
         FROM (
-            SELECT word, rank, cos_sim, uuid
+            SELECT word, rank,
+                   cos_sim as cosineSimilarity,
+                   uuid
             FROM KOMANTLE_TRIALS
             WHERE uuid = #{uuid}
                 AND TRUNC(CREATED_AT) = TRUNC(SYSDATE)
