@@ -12,6 +12,15 @@
         <result column="UPDATED_AT" property="updatedAt"/>
         <result column="DELETED_AT" property="deletedAt"/>
     </resultMap>
+    <resultMap id="UserWithRankResultMap" type="org.example.kiwii.dto.user.UserInfoDTO">
+        <result column="ACCOUNT_ID" property="accountId"/>
+        <result column="TOTAL_EARNED_POINTS" property="totalEarnedPoints"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="UPDATED_AT" property="updatedAt"/>
+        <result column="DELETED_AT" property="deletedAt"/>
+        <result column="RANK" property="rank"/>
+
+    </resultMap>
 
 
     <select id="selectAllUser"
@@ -69,6 +78,27 @@
         WHERE UUID = #{uuid}
         ]]>
     </select>
+    <select id="selectUserWithRankByUserUUID"
+            parameterType="Integer"
+            resultType="org.example.kiwii.dto.user.UserInfoDTO"
+            resultMap="UserWithRankResultMap">
+    <![CDATA[
+        SELECT *
+        from (SELECT UUID,
+                     USERNAME,
+                     PASSWORD,
+                     ACCOUNT_ID,
+                     POINT,
+                     CREATED_AT,
+                     UPDATED_AT,
+                     DELETED_AT,
+                     TOTAL_EARNED_POINTS                             AS TOTAL_EARNED_POINTS,
+                     RANK() OVER (ORDER BY TOTAL_EARNED_POINTS DESC) AS RANK
+              FROM USERS)
+        where UUID = #{uuid}
+        ]]>
+    </select>
+
     <select id="selectUserPointByUserUUID"
             parameterType="Integer"
             resultType="Integer"
@@ -79,10 +109,27 @@
         WHERE UUID = #{uuid}
         ]]>
     </select>
+    <select id="selectUserTotalEarnedPointByUserUUID"
+            parameterType="Integer"
+            resultType="Integer"
+    >
+        <![CDATA[
+        SELECT TOTAL_EARNED_POINTS
+        FROM USERS
+        WHERE UUID = #{uuid}
+        ]]>
+    </select>
     <update id="updateUserPointByUserUUID" parameterType="map">
     <![CDATA[
         UPDATE USERS
         SET POINT = #{afterPoint}
+        WHERE UUID = #{uuid}
+        ]]>
+    </update>
+    <update id="updateUserTotalEarnedPointByUserUUID" parameterType="map">
+    <![CDATA[
+        UPDATE USERS
+        SET TOTAL_EARNED_POINTS = #{afterTotalEarnedPoint}
         WHERE UUID = #{uuid}
         ]]>
     </update>

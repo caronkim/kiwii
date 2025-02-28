@@ -3,6 +3,7 @@ package org.example.kiwii.controller.user;
 import com.google.gson.Gson;
 import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.dto.ApiResponse;
+import org.example.kiwii.dto.user.UserInfoDTO;
 import org.example.kiwii.dto.user.UserRankDTO;
 import org.example.kiwii.service.user.UserService;
 import org.example.kiwii.vo.user.UserVO;
@@ -39,16 +40,16 @@ public class UserServlet extends HttpServlet {
                 out.close();
             }
 
-            UserVO selectedUser = userService.selectUserByUserUUID(loginUser.getUuid());
+            UserInfoDTO selectedUser = userService.selectUserByUserUUID(loginUser.getUuid());
             if(selectedUser != null) {
-                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "success", selectedUser);
+                ApiResponse<UserInfoDTO> apiResponse = new ApiResponse<>(200, "success", selectedUser);
 
                 PrintWriter out = resp.getWriter();
                 out.print(gson.toJson(apiResponse));
                 out.flush();
                 out.close();
             }else {
-                ApiResponse<UserVO> apiResponse = new ApiResponse<>(200, "error");
+                ApiResponse<Object> apiResponse = new ApiResponse<>(200, "error");
 
                 PrintWriter out = resp.getWriter();
                 out.print(gson.toJson(apiResponse));

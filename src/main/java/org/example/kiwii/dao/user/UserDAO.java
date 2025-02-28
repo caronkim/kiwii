@@ -1,6 +1,7 @@
 package org.example.kiwii.dao.user;
 
 import org.apache.ibatis.session.SqlSession;
+import org.example.kiwii.dto.user.UserInfoDTO;
 import org.example.kiwii.vo.user.UserVO;
 
 import java.util.HashMap;
@@ -25,20 +26,30 @@ public class UserDAO {
         }
     }
 
-    public UserVO selectUserByUserUUID(int uuid) {
-        UserVO userVO = null;
+    public UserInfoDTO selectUserByUserUUID(int uuid) {
+        UserInfoDTO userWithRank= null;
         try {
-            userVO = sqlSession.selectOne("User.selectUserByUserUUID", uuid);
-            return userVO;
+            System.out.println("try with rank");
+            userWithRank = sqlSession.selectOne("User.selectUserWithRankByUserUUID", uuid);
+            System.out.println("userWithRank done");
+            return userWithRank;
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return userVO;
+            return userWithRank;
         }
     }
 
     public Integer selectUserPointByUserUUID(int uuid) {
         try{
             return sqlSession.selectOne("User.selectUserPointByUserUUID", uuid);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    public Integer selectUserTotalEarnedPointByUserUUID(int uuid) {
+        try{
+            return sqlSession.selectOne("User.selectUserTotalEarnedPointByUserUUID", uuid);
         }catch (Exception e){
             System.out.println(e.getMessage());
             return null;
@@ -93,6 +104,21 @@ public class UserDAO {
         }catch (Exception e){
             System.out.println(e.getMessage());
             return userVOList;
+        }
+    }
+
+
+
+    public void updateUserTotalEarnedPointByUserUUID(int uuid, int afterTotalEarnedPoint) {
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("afterTotalEarnedPoint", afterTotalEarnedPoint);
+        params.put("uuid", uuid);
+
+        try{
+            sqlSession.update("User.updateUserTotalEarnedPointByUserUUID", params);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 }

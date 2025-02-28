@@ -3,6 +3,7 @@ package org.example.kiwii.service.user;
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.dao.point.PointDAO;
 import org.example.kiwii.dao.user.UserDAO;
+import org.example.kiwii.dto.user.UserInfoDTO;
 import org.example.kiwii.dto.user.UserRankDTO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.vo.point.PointHistoryVO;
@@ -35,19 +36,20 @@ public class UserService {
 
     }
 
-    public UserVO selectUserByUserUUID(int uuid) {
+    public UserInfoDTO selectUserByUserUUID(int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         UserDAO userDAO = new UserDAO(sqlSession);
 
-        UserVO selectedUser= userDAO.selectUserByUserUUID(uuid);
+        UserInfoDTO selectedUserWithRank= userDAO.selectUserByUserUUID(uuid);
 
-        if(selectedUser == null){
+
+        if(selectedUserWithRank == null){
             //username 유저가 존재하지 않을 경우
             sqlSession.close();
             return null;
         }else {
             sqlSession.close();
-            return selectedUser;
+            return selectedUserWithRank;
         }
 
     }
@@ -59,15 +61,23 @@ public class UserService {
 
         try {
             Integer beforePoint = userDAO.selectUserPointByUserUUID(pointHistoryVO.getUuid());
+            Integer beforeTotalEarnedPoint = userDAO.selectUserTotalEarnedPointByUserUUID(pointHistoryVO.getUuid());
 
-            if (beforePoint == null) {
+
+
+            if (beforePoint == null || beforeTotalEarnedPoint == null) {
                 return null;  // 사용자 정보 없음
             }
 
             int afterPoint = beforePoint + pointHistoryVO.getAmount();
+            int afterTotalEarnedPoint = beforeTotalEarnedPoint + pointHistoryVO.getAmount();
 
             // ✅ user point update
             userDAO.updateUserPointByUserUUID(pointHistoryVO.getUuid(), afterPoint);
+
+            // ✅ user Total earned point update
+            userDAO.updateUserTotalEarnedPointByUserUUID(pointHistoryVO.getUuid(), afterTotalEarnedPoint);
+
             // ✅ point history insert
             pointDAO.insertPointHistory(pointHistoryVO);
             sqlSession.commit(); // ✅ 커밋
