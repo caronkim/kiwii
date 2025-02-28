@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="StockUpDown">
+<mapper namespace="StockUpDownTrial">
     <insert id="insertStockUpDownTrial" parameterType="StockUpDownVO">
         <![CDATA[
         INSERT INTO PREDICT_STOCK_TRIALS (ID, USER_ANSWER, PREDICT_GAME_ID, UUID)
