@@ -40,7 +40,7 @@ public class UserServlet extends HttpServlet {
                 out.close();
             }
 
-            UserInfoDTO selectedUser = userService.selectUserByUserUUID(loginUser.getUuid());
+            UserInfoDTO selectedUser = userService.selectUserWithRankByUserUUID(loginUser.getUuid());
             if(selectedUser != null) {
                 ApiResponse<UserInfoDTO> apiResponse = new ApiResponse<>(200, "success", selectedUser);
 

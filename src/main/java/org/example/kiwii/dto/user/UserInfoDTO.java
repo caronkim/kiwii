@@ -30,4 +30,84 @@ public class UserInfoDTO {
         this.totalEarnedPoints = user.getTotalEarnedPoints();
         this.rank = rank;
     }
+
+    public int getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(int uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Timestamp getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Timestamp deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public int getTotalEarnedPoints() {
+        return totalEarnedPoints;
+    }
+
+    public void setTotalEarnedPoints(int totalEarnedPoints) {
+        this.totalEarnedPoints = totalEarnedPoints;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 }

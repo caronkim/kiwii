@@ -2,6 +2,7 @@ package org.example.kiwii.dao.user;
 
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.dto.user.UserInfoDTO;
+import org.example.kiwii.dto.user.UserRankDTO;
 import org.example.kiwii.vo.user.UserVO;
 
 import java.util.HashMap;
@@ -26,12 +27,10 @@ public class UserDAO {
         }
     }
 
-    public UserInfoDTO selectUserByUserUUID(int uuid) {
+    public UserInfoDTO selectUserWithRankByUserUUID(int uuid) {
         UserInfoDTO userWithRank= null;
         try {
-            System.out.println("try with rank");
             userWithRank = sqlSession.selectOne("User.selectUserWithRankByUserUUID", uuid);
-            System.out.println("userWithRank done");
             return userWithRank;
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -96,10 +95,10 @@ public class UserDAO {
         }
     }
 
-    public List<UserVO> selectUserByRank() {
-        List<UserVO> userVOList = null;
+    public List<UserInfoDTO> selectTopTenUserByRank() {
+        List<UserInfoDTO> userVOList = null;
         try{
-            userVOList = sqlSession.selectList("User.selectUserByRank");
+            userVOList = sqlSession.selectList("User.selectTopTenUserWithRank");
             return userVOList;
         }catch (Exception e){
             System.out.println(e.getMessage());
