@@ -27,14 +27,22 @@ public class StockUpDownService {
         }
     }
 
-    public void insertStockUpDownLog() {
+    public int insertStockUpDownLog() {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             StockUpDownTrialDAO stockUpDownTrialDAO = new StockUpDownTrialDAO(sqlSession);
-            stockUpDownTrialDAO.insertStockUpDownLog();
+            int inserted = stockUpDownTrialDAO.insertStockUpDownLog();
+            if (inserted == 0) {
+                sqlSession.rollback();
+                return 0;
+            } else {
+                sqlSession.commit();
+                return inserted;
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             sqlSession.rollback();
+            return 0;
         } finally {
             sqlSession.close();
         }
