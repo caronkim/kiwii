@@ -33,11 +33,24 @@ public class StockUpDownService {
         }
     }
 
-    public StockUpDownVO selectStockUpDownByUUID(String uuid) {
+    public StockUpDownVO selectStockUpDownByUUID(int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             StockUpDownTrialDAO stockUpDownTrialDAO = new StockUpDownTrialDAO(sqlSession);
             return stockUpDownTrialDAO.selectStockUpDownByUUID(uuid);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    public String selectTodayCompanyName(){
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            StockUpDownTrialDAO stockUpDownTrialDAO = new StockUpDownTrialDAO(sqlSession);
+            return stockUpDownTrialDAO.selectTodayCompanyName();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

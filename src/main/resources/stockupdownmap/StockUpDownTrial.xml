@@ -32,7 +32,7 @@
         ]]>
     </insert>
 
-    <select id="selectStockUpDownByUUID" parameterType="String" resultType="StockUpDownVO">
+    <select id="selectStockUpDownByUUID" parameterType="int" resultType="StockUpDownVO">
         <![CDATA[
         SELECT
             ID AS id,
@@ -41,6 +41,16 @@
             UUID AS uuid
         FROM PREDICT_STOCK_TRIALS
         WHERE UUID = #{uuid}
+        ]]>
+    </select>
+
+    <select id="selectTodayCompanyName" resultType="String">
+        <![CDATA[
+        SELECT NAME
+        FROM RANDOM_STOCKS
+        WHERE TICKER = (SELECT TICKER
+                        FROM PREDICT_STOCK
+                        WHERE TRUNC(CREATED_AT) = TRUNC(SYSDATE))
         ]]>
     </select>
 </mapper>

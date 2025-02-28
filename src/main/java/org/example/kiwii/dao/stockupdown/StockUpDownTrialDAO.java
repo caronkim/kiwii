@@ -29,9 +29,18 @@ public class StockUpDownTrialDAO {
         }
     }
 
-    public StockUpDownVO selectStockUpDownByUUID(String uuid) {
+    public StockUpDownVO selectStockUpDownByUUID(int uuid) {
         try {
             return sqlSession.selectOne("StockUpDownTrial.selectStockUpDownByUUID", uuid);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public String selectTodayCompanyName(){
+        try {
+            return sqlSession.selectOne("StockUpDownTrial.selectTodayCompanyName");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
