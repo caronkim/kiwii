@@ -26,12 +26,10 @@ public class UserDAO {
         }
     }
 
-    public UserInfoDTO selectUserByUserUUID(int uuid) {
+    public UserInfoDTO selectUserWithRankByUserUUID(int uuid) {
         UserInfoDTO userWithRank= null;
         try {
-            System.out.println("try with rank");
             userWithRank = sqlSession.selectOne("User.selectUserWithRankByUserUUID", uuid);
-            System.out.println("userWithRank done");
             return userWithRank;
         }catch (Exception e){
             System.out.println(e.getMessage());

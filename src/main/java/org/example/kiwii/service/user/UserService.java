@@ -36,11 +36,11 @@ public class UserService {
 
     }
 
-    public UserInfoDTO selectUserByUserUUID(int uuid) {
+    public UserInfoDTO selectUserWithRankByUserUUID(int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         UserDAO userDAO = new UserDAO(sqlSession);
 
-        UserInfoDTO selectedUserWithRank= userDAO.selectUserByUserUUID(uuid);
+        UserInfoDTO selectedUserWithRank= userDAO.selectUserWithRankByUserUUID(uuid);
 
 
         if(selectedUserWithRank == null){
