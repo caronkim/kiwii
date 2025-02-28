@@ -1,10 +1,8 @@
 package org.example.kiwii.controller.kimantle;
 
 import com.google.gson.Gson;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.example.kiwii.CookieUtil.CookieUtil;
-import org.example.kiwii.dao.kimantle.KimantleTrialDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.service.kimantle.KimantleService;
 import org.example.kiwii.vo.kimantle.KimantleVO;
@@ -24,13 +22,6 @@ import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
 
 @WebServlet("/api/kimantle")
 public class KimantleServlet extends HttpServlet {
-
-    private SqlSessionFactory sqlSessionFactory;
-
-    @Override
-    public void init() {
-        sqlSessionFactory = MyBatisSessionFactory.getSqlSessionFactory();
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

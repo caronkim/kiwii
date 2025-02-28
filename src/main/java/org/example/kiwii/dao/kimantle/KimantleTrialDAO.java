@@ -3,7 +3,6 @@ package org.example.kiwii.dao.kimantle;
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.vo.kimantle.KimantleVO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class KimantleTrialDAO {
@@ -27,7 +26,6 @@ public class KimantleTrialDAO {
         try {
             return sqlSession.selectOne("KimantleTrial.isWord", word) != null;
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
             return false;
         }
@@ -37,7 +35,6 @@ public class KimantleTrialDAO {
         try {
             sqlSession.insert("KimantleTrial.insertTodayWord", word);
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
@@ -49,7 +46,6 @@ public class KimantleTrialDAO {
         try {
             sqlSession.insert("KimantleTrial.insertTrials", kimantleVO);
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
@@ -58,9 +54,7 @@ public class KimantleTrialDAO {
         try {
             return sqlSession.selectList("KimantleTrial.getRecentTrials", uuid);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("getRecentTrials 실행 중 오류 발생: " + e.getMessage());
-//            return new ArrayList<>();
         }
     }
 }
