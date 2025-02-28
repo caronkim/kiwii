@@ -46,7 +46,7 @@
 
     <select id="selectTodayCompanyName" resultType="String">
         <![CDATA[
-        SELECT NAME
+        SELECT NAME AS companyName
         FROM RANDOM_STOCKS
         WHERE TICKER = (SELECT TICKER
                         FROM PREDICT_STOCK
