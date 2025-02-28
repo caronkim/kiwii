@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
+
 @WebServlet("/api/kimantle")
 public class KimantleServlet extends HttpServlet {
 
@@ -86,29 +88,26 @@ public class KimantleServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-        String uuid = request.getParameter("uuid");
+        String uuid = getCookieValue(request, "uuid");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         Map<String, Object> jsonResponse = new HashMap<>();
+        KimantleService kimantleService = new KimantleService();
 
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
-
-            if (uuid == null || uuid.isEmpty()) {
-                jsonResponse.put("status", "fail");
-                jsonResponse.put("message", "UUID가 필요합니다.");
-            } else {
-                List<KimantleVO> recentTrials = kimantleTrialDAO.getRecentTrials(uuid);
-                jsonResponse.put("status", "success");
-                jsonResponse.put("history", recentTrials);
-            }
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        if (uuid == null || uuid.isEmpty()) {
             jsonResponse.put("status", "error");
-            jsonResponse.put("message", e.getMessage());  // 🔥 예외 메시지를 반환
-//            e.printStackTrace(); // 콘솔에 로그 출력
+            jsonResponse.put("message", "UUID가 필요합니다.");
+        } else {
+            List<KimantleVO> recentTrials = kimantleService.getRecentTrials(uuid);
+            if (recentTrials.isEmpty()) {
+                jsonResponse.put("message", "최근 기록이 없습니다.");
+            } else {
+                jsonResponse.put("message", "최근 기록이 있습니다");
+            }
+            jsonResponse.put("status", "success");
+            jsonResponse.put("history", recentTrials);
         }
 
         out.print(gson.toJson(jsonResponse));

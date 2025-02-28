@@ -5,6 +5,8 @@ import org.example.kiwii.dao.kimantle.KimantleTrialDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.vo.kimantle.KimantleVO;
 
+import java.util.List;
+
 public class KimantleService {
     public boolean isWord(String word) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
@@ -43,6 +45,19 @@ public class KimantleService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             sqlSession.rollback();
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    public List<KimantleVO> getRecentTrials(String uuid) {
+        SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
+            return kimantleTrialDAO.getRecentTrials(uuid);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         } finally {
             sqlSession.close();
         }
