@@ -13,9 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
 
 @WebServlet("/api/stock-up-down/*")
@@ -57,6 +54,7 @@ public class StockUpDownServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uuid = getCookieValue(req, "uuid");
+        ApiResponse<StockUpDownVO> apiResponse;
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -68,19 +66,16 @@ public class StockUpDownServlet extends HttpServlet {
 
         if (stockUpDownVO == null) {
             // 사용자의 예측 기록이 없을 경우
-            ApiResponse<StockUpDownVO> apiResponse = new ApiResponse<>(200, "no trial today", stockUpDownVO);
+            apiResponse = new ApiResponse<>(200, "no trial today", stockUpDownVO);
         } else {
             // 응답 데이터 구성
-            ApiResponse<StockUpDownVO> apiResponse = new ApiResponse<>(200, "success", stockUpDownVO);
-
-            // JSON 응답 전송
-            out.write(gson.toJson(apiResponse));
-            out.flush();
-            out.close();
+            apiResponse = new ApiResponse<>(200, "success", stockUpDownVO);
         }
-//        } else {
-//            // 잘못된 요청 처리
-//            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid API endpoint");
-//        }
+
+        // JSON 응답 전송
+        out.write(gson.toJson(apiResponse));
+        out.flush();
+        out.close();
+
     }
 }
