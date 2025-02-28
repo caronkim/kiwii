@@ -36,7 +36,7 @@ public class KimantleService {
         }
     }
 
-    public void insertTrials(KimantleVO kimantleVO, String word, String uuid) {
+    public void insertTrials(KimantleVO kimantleVO, String word, int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
@@ -50,7 +50,7 @@ public class KimantleService {
         }
     }
 
-    public List<KimantleVO> getRecentTrials(String uuid) {
+    public List<KimantleVO> getRecentTrials(int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);

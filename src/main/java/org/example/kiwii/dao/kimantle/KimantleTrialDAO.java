@@ -39,7 +39,7 @@ public class KimantleTrialDAO {
         }
     }
 
-    public void insertTrials(KimantleVO kimantleVO, String word, String uuid) {
+    public void insertTrials(KimantleVO kimantleVO, String word, int uuid) {
         kimantleVO.setUuid(uuid);
         kimantleVO.setWord(word);
 
@@ -50,7 +50,7 @@ public class KimantleTrialDAO {
         }
     }
 
-    public List<KimantleVO> getRecentTrials(String uuid) {
+    public List<KimantleVO> getRecentTrials(int uuid) {
         try {
             return sqlSession.selectList("KimantleTrial.getRecentTrials", uuid);
         } catch (Exception e) {

@@ -3,7 +3,9 @@ package org.example.kiwii.controller.kimantle;
 import com.google.gson.Gson;
 import org.example.kiwii.CookieUtil.CookieUtil;
 import org.example.kiwii.service.kimantle.KimantleService;
+import org.example.kiwii.service.user.UserService;
 import org.example.kiwii.vo.kimantle.KimantleVO;
+import org.example.kiwii.vo.point.PointHistoryVO;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,13 +36,17 @@ public class KimantleServlet extends HttpServlet {
         Gson gson = new Gson();
         Map<String, Object> map = gson.fromJson(json, Map.class);
         String userWord = (String) map.get("word");
-        String uuid = CookieUtil.getCookieValue(request, "uuid");
+        String uuidStr = CookieUtil.getCookieValue(request, "uuid");
+        int uuid = Integer.parseInt(uuidStr);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         Map<String, Object> jsonResponse = new HashMap<>();
         KimantleService kimantleService = new KimantleService();
+
+        // 정답시 1 아닐시 0
+        int correct = 0;
 
 
         // 1. 입력한 단어가 사전에 있는지 확인
@@ -56,8 +62,23 @@ public class KimantleServlet extends HttpServlet {
             KimantleVO result = kimantleService.tryAnswer(userWord);
 
             if (result != null) {
-                jsonResponse.put("rank", result.getRank());
+                int rank = result.getRank();
+                jsonResponse.put("rank", rank);
                 jsonResponse.put("similarity", result.getCosineSimilarity());
+                // 정답 시
+                if (rank == 0){
+                    // 클라이언트에 정답을 알림
+                    correct = 1;
+                    // 점수 증가
+                    PointHistoryVO pointHistoryVO = new PointHistoryVO();
+                    pointHistoryVO.setUuid(uuid);
+                    pointHistoryVO.setContent("Kimantle 정답");
+                    pointHistoryVO.setAmount(200);
+
+                    UserService userService = new UserService();
+                    userService.depositPointByUserUUID(pointHistoryVO);
+                }
+                jsonResponse.put("correct", correct);
 
                 // 3. 입력 로그 저장
                 kimantleService.insertTrials(result, userWord, uuid);
@@ -77,7 +98,7 @@ public class KimantleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        String uuid = getCookieValue(request, "uuid");
+        String uuidStr = getCookieValue(request, "uuid");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
@@ -85,10 +106,11 @@ public class KimantleServlet extends HttpServlet {
         Map<String, Object> jsonResponse = new HashMap<>();
         KimantleService kimantleService = new KimantleService();
 
-        if (uuid == null || uuid.isEmpty()) {
+        if (uuidStr == null || uuidStr.isEmpty()) {
             jsonResponse.put("status", "error");
             jsonResponse.put("message", "UUID가 필요합니다.");
         } else {
+            int uuid = Integer.parseInt(uuidStr);
             List<KimantleVO> recentTrials = kimantleService.getRecentTrials(uuid);
             if (recentTrials.isEmpty()) {
                 jsonResponse.put("message", "최근 기록이 없습니다.");
