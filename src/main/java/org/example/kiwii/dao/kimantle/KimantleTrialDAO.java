@@ -39,14 +39,14 @@ public class KimantleTrialDAO {
         }
     }
 
-    public void insertTrials(KimantleVO kimantleVO, String word, int uuid) {
+    public int insertTrials(KimantleVO kimantleVO, String word, int uuid) {
         kimantleVO.setUuid(uuid);
         kimantleVO.setWord(word);
-
         try {
-            sqlSession.insert("KimantleTrial.insertTrials", kimantleVO);
+            return sqlSession.insert("KimantleTrial.insertTrials", kimantleVO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return 0;
         }
     }
 

@@ -81,8 +81,14 @@ public class KimantleServlet extends HttpServlet {
                 jsonResponse.put("correct", correct);
 
                 // 3. 입력 로그 저장
-                kimantleService.insertTrials(result, userWord, uuid);
-                jsonResponse.put("status", "success");
+                int inserted = kimantleService.insertTrials(result, userWord, uuid);
+                if (inserted != 0) {
+                    jsonResponse.put("status", "success");
+                } else{
+                    jsonResponse.put("status", "fail");
+                    jsonResponse.put("message", "이미 입력한 단어입니다.");
+                }
+
             } else {
                 jsonResponse.put("status", "fail");
                 jsonResponse.put("message", "단어가 오늘의 순위에 없습니다.");
