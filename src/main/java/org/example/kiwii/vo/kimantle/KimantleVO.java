@@ -4,12 +4,12 @@ public class KimantleVO {
     private String word;
     private int rank;
     private double cosineSimilarity;
-    private String uuid;
+    private int uuid;
 
     public KimantleVO() {
     }
 
-    public KimantleVO(String word, int rank, double cosineSimilarity, String uuid) {
+    public KimantleVO(String word, int rank, double cosineSimilarity, int uuid) {
         this.word = word;
         this.rank = rank;
         this.cosineSimilarity = cosineSimilarity;
@@ -45,11 +45,11 @@ public class KimantleVO {
         this.cosineSimilarity = cosineSimilarity;
     }
 
-    public String getUuid() {
+    public int getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(int uuid) {
         this.uuid = uuid;
     }
 }

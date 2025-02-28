@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.example.kiwii.dto.ApiResponse;
 import org.example.kiwii.service.stockupdown.StockUpDownService;
 import org.example.kiwii.vo.stockupdown.StockUpDownTrialVO;
-import org.example.kiwii.vo.stockupdown.StockUpDownVO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,29 +34,45 @@ public class StockUpDownServlet extends HttpServlet {
         String json = jsonBuilder.toString();
         Gson gson = new Gson();
         Map<String, Object> map = gson.fromJson(json, Map.class);
+        ApiResponse<String> apiResponse;
 
         if (pathInfo.equals("/predict")) {
             String userAnswer = (String) map.get("trial");
             String predictGameId = "";
 //            String predictGameId = (String) map.get("gameId");
-            String uuid = getCookieValue(req, "uuid");
+            String uuidStr = getCookieValue(req, "uuid");
+            int uuid = Integer.parseInt(uuidStr);
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
             PrintWriter out = resp.getWriter();
 
             StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, predictGameId, userAnswer);
-//            StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, userAnswer);
-            // 사용자 입력 정답 DB에 저장
-            stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
-            // 응답 데이터 구성
-            ApiResponse<String> apiResponse = new ApiResponse<>(200, "success", "Prediction recorded successfully");
+            if ("O".equals(userAnswer) || "X".equals(userAnswer)) {
+                // 사용자 입력 정답 DB에 저장
+                int inserted = stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
-            // JSON 응답 전송
-            out.write(gson.toJson(apiResponse));
-            out.flush();
-            out.close();
+                if (inserted == 0) {
+                    // 실패 시
+                    apiResponse = new ApiResponse<>(400, "fail", "Failed to record prediction");
+
+                } else {
+                    // 응답 데이터 구성
+                    apiResponse = new ApiResponse<>(200, "success", "Prediction recorded successfully");
+                }
+                // JSON 응답 전송
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            } else {
+                // 사용자 입력이 O 또는 X가 아닌 경우
+                apiResponse = new ApiResponse<>(400, "fail", "Not a valid answer");
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
+            }
+
         } else {
             // 잘못된 요청 처리
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid API endpoint");
@@ -79,11 +94,13 @@ public class StockUpDownServlet extends HttpServlet {
         String comapanyName = stockUpDownService.selectTodayCompanyName();
 
         // 사용자의 예측 기록 조회
-        StockUpDownVO stockUpDownVO = stockUpDownService.selectStockUpDownByUUID(uuid);
+        StockUpDownTrialVO stockUpDownVO = stockUpDownService.selectStockUpDownByUUID(uuid);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("companyName", comapanyName);
         map.put("stockUpDownVO", stockUpDownVO);
+
+        System.out.println(map);
 
         if (stockUpDownVO == null) {
             // 사용자의 예측 기록이 없을 경우

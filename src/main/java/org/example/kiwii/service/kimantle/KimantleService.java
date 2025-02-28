@@ -79,21 +79,28 @@ public class KimantleService {
         return result;
     }
 
-    public void insertTrials(KimantleVO kimantleVO, String word, String uuid) {
+    public int insertTrials(KimantleVO kimantleVO, String word, int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
-            kimantleTrialDAO.insertTrials(kimantleVO, word, uuid);
-            sqlSession.commit();
+            int inserted = kimantleTrialDAO.insertTrials(kimantleVO, word, uuid);
+            if (inserted == 0) {
+                sqlSession.rollback();
+                return 0;
+            } else {
+                sqlSession.commit();
+                return inserted;
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             sqlSession.rollback();
+            return 0;
         } finally {
             sqlSession.close();
         }
     }
 
-    public List<KimantleVO> getRecentTrials(String uuid) {
+    public List<KimantleVO> getRecentTrials(int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             KimantleTrialDAO kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
