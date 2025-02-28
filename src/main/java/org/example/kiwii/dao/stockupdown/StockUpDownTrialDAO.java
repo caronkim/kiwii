@@ -2,7 +2,6 @@ package org.example.kiwii.dao.stockupdown;
 
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.vo.stockupdown.StockUpDownTrialVO;
-import org.example.kiwii.vo.stockupdown.StockUpDownVO;
 
 public class StockUpDownTrialDAO {
     private final SqlSession sqlSession;
@@ -31,7 +30,7 @@ public class StockUpDownTrialDAO {
         }
     }
 
-    public StockUpDownVO selectStockUpDownByUUID(int uuid) {
+    public StockUpDownTrialVO selectStockUpDownByUUID(int uuid) {
         try {
             return sqlSession.selectOne("StockUpDownTrial.selectStockUpDownByUUID", uuid);
         } catch (Exception e) {

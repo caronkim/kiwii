@@ -1,7 +1,8 @@
 package org.example.kiwii.vo.stockupdown;
 
 public class StockUpDownTrialVO {
-    private String uuid;
+    private int id;
+    private int uuid;
     private String predictGameId;
     private String userAnswer;
     private String isCor;
@@ -9,7 +10,7 @@ public class StockUpDownTrialVO {
     public StockUpDownTrialVO() {
     }
 
-    public StockUpDownTrialVO(String uuid, String predictGameId, String userAnswer, String isCor) {
+    public StockUpDownTrialVO(int uuid, String predictGameId, String userAnswer, String isCor) {
         this.uuid = uuid;
         this.predictGameId = predictGameId;
         this.userAnswer = userAnswer;
@@ -17,23 +18,23 @@ public class StockUpDownTrialVO {
     }
 
     // PREDICT_STOCK_LOG 입력를 위한 VO
-    public StockUpDownTrialVO(String uuid, String isCor){
+    public StockUpDownTrialVO(int uuid, String isCor){
         this.uuid = uuid;
         this.isCor = isCor;
     }
 
     // PREDICT_STOCK_TRIALS 입력을 위한 VO
-    public StockUpDownTrialVO(String uuid, String predictGameId, String userAnswer){
+    public StockUpDownTrialVO(int uuid, String predictGameId, String userAnswer){
         this.uuid = uuid;
         this.predictGameId = predictGameId;
         this.userAnswer = userAnswer;
     }
 
-    public String getUuid() {
+    public int getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(int uuid) {
         this.uuid = uuid;
     }
 

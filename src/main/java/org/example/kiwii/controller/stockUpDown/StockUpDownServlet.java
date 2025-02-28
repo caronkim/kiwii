@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.example.kiwii.dto.ApiResponse;
 import org.example.kiwii.service.stockupdown.StockUpDownService;
 import org.example.kiwii.vo.stockupdown.StockUpDownTrialVO;
-import org.example.kiwii.vo.stockupdown.StockUpDownVO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,7 +40,8 @@ public class StockUpDownServlet extends HttpServlet {
             String userAnswer = (String) map.get("trial");
             String predictGameId = "";
 //            String predictGameId = (String) map.get("gameId");
-            String uuid = getCookieValue(req, "uuid");
+            String uuidStr = getCookieValue(req, "uuid");
+            int uuid = Integer.parseInt(uuidStr);
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
@@ -86,11 +86,13 @@ public class StockUpDownServlet extends HttpServlet {
         String comapanyName = stockUpDownService.selectTodayCompanyName();
 
         // 사용자의 예측 기록 조회
-        StockUpDownVO stockUpDownVO = stockUpDownService.selectStockUpDownByUUID(uuid);
+        StockUpDownTrialVO stockUpDownVO = stockUpDownService.selectStockUpDownByUUID(uuid);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("companyName", comapanyName);
         map.put("stockUpDownVO", stockUpDownVO);
+
+        System.out.println(map);
 
         if (stockUpDownVO == null) {
             // 사용자의 예측 기록이 없을 경우
