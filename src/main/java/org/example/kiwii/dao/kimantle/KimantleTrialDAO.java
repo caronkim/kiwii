@@ -15,7 +15,7 @@ public class KimantleTrialDAO {
 
     public KimantleVO tryAnswer(String word) {
         try {
-            return sqlSession.selectOne("KomantleTrial.selectCosineSimilarity", word);
+            return sqlSession.selectOne("KimantleTrial.selectCosineSimilarity", word);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -25,7 +25,7 @@ public class KimantleTrialDAO {
 
     public boolean isWord(String word) {
         try {
-            return sqlSession.selectOne("KomantleTrial.isWord", word) != null;
+            return sqlSession.selectOne("KimantleTrial.isWord", word) != null;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -35,7 +35,7 @@ public class KimantleTrialDAO {
 
     public void insertTodayWord(String word) {
         try {
-            sqlSession.insert("KomantleTrial.insertTodayWord", word);
+            sqlSession.insert("KimantleTrial.insertTodayWord", word);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -47,7 +47,7 @@ public class KimantleTrialDAO {
         kimantleVO.setWord(word);
 
         try {
-            sqlSession.insert("KomantleTrial.insertTrials", kimantleVO);
+            sqlSession.insert("KimantleTrial.insertTrials", kimantleVO);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
