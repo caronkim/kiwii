@@ -7,14 +7,21 @@ import org.example.kiwii.vo.stockupdown.StockUpDownTrialVO;
 import org.example.kiwii.vo.stockupdown.StockUpDownVO;
 
 public class StockUpDownService {
-    public void insertStockUpDownTrial(StockUpDownTrialVO stockUpDownTrialVO) {
+    public int insertStockUpDownTrial(StockUpDownTrialVO stockUpDownTrialVO) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
              StockUpDownTrialDAO stockUpDownTrialDAO = new StockUpDownTrialDAO(sqlSession);
-             stockUpDownTrialDAO.insertStockUpDownTrial(stockUpDownTrialVO);
+             if (stockUpDownTrialDAO.insertStockUpDownTrial(stockUpDownTrialVO) == 0) {
+                 sqlSession.rollback();
+                 return 0;
+             } else {
+                 sqlSession.commit();
+                 return 1;
+             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             sqlSession.rollback();
+            return 0;
         } finally {
             sqlSession.close();
         }

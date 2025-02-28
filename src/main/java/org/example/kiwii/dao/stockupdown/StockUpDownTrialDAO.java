@@ -12,11 +12,12 @@ public class StockUpDownTrialDAO {
     }
 
     // 유저의 주식 상승, 하락 예측을 저장하는 메서드
-    public void insertStockUpDownTrial(StockUpDownTrialVO stockUpDownTrialVO) {
+    public int insertStockUpDownTrial(StockUpDownTrialVO stockUpDownTrialVO) {
         try {
-            sqlSession.insert("StockUpDownTrial.insertStockUpDownTrial", stockUpDownTrialVO);
+            return sqlSession.insert("StockUpDownTrial.insertStockUpDownTrial", stockUpDownTrialVO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return 0;
         }
     }
 

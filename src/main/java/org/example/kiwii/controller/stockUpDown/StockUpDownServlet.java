@@ -35,6 +35,7 @@ public class StockUpDownServlet extends HttpServlet {
         String json = jsonBuilder.toString();
         Gson gson = new Gson();
         Map<String, Object> map = gson.fromJson(json, Map.class);
+        ApiResponse<String> apiResponse;
 
         if (pathInfo.equals("/predict")) {
             String userAnswer = (String) map.get("trial");
@@ -49,15 +50,21 @@ public class StockUpDownServlet extends HttpServlet {
             StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, predictGameId, userAnswer);
 //            StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, userAnswer);
             // 사용자 입력 정답 DB에 저장
-            stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
+            int inserted = stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
-            // 응답 데이터 구성
-            ApiResponse<String> apiResponse = new ApiResponse<>(200, "success", "Prediction recorded successfully");
+            if (inserted == 0) {
+                // 실패 시
+                apiResponse = new ApiResponse<>(400, "fail", "Failed to record prediction");
 
+            } else {
+                // 응답 데이터 구성
+                apiResponse = new ApiResponse<>(200, "success", "Prediction recorded successfully");
+            }
             // JSON 응답 전송
             out.write(gson.toJson(apiResponse));
             out.flush();
             out.close();
+
         } else {
             // 잘못된 요청 처리
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid API endpoint");
