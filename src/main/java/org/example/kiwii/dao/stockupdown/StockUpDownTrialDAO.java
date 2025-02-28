@@ -2,7 +2,6 @@ package org.example.kiwii.dao.stockupdown;
 
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.vo.stockupdown.StockUpDownTrialVO;
-import org.example.kiwii.vo.stockupdown.StockUpDownVO;
 
 public class StockUpDownTrialDAO {
     private final SqlSession sqlSession;
@@ -22,15 +21,16 @@ public class StockUpDownTrialDAO {
     }
 
     // 어제의 예측한 값을 자동으로 체점하고 결과를 저장하는 메서드
-    public void insertStockUpDownLog() {
+    public int insertStockUpDownLog() {
         try {
-            sqlSession.insert("StockUpDownTrial.insertStockUpDownLog");
+            return sqlSession.insert("StockUpDownTrial.insertStockUpDownLog");
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return 0;
         }
     }
 
-    public StockUpDownVO selectStockUpDownByUUID(int uuid) {
+    public StockUpDownTrialVO selectStockUpDownByUUID(int uuid) {
         try {
             return sqlSession.selectOne("StockUpDownTrial.selectStockUpDownByUUID", uuid);
         } catch (Exception e) {

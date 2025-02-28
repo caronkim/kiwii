@@ -4,7 +4,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.dao.stockupdown.StockUpDownTrialDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.vo.stockupdown.StockUpDownTrialVO;
-import org.example.kiwii.vo.stockupdown.StockUpDownVO;
 
 public class StockUpDownService {
     public int insertStockUpDownTrial(StockUpDownTrialVO stockUpDownTrialVO) {
@@ -27,20 +26,28 @@ public class StockUpDownService {
         }
     }
 
-    public void insertStockUpDownLog() {
+    public int insertStockUpDownLog() {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             StockUpDownTrialDAO stockUpDownTrialDAO = new StockUpDownTrialDAO(sqlSession);
-            stockUpDownTrialDAO.insertStockUpDownLog();
+            int inserted = stockUpDownTrialDAO.insertStockUpDownLog();
+            if (inserted == 0) {
+                sqlSession.rollback();
+                return 0;
+            } else {
+                sqlSession.commit();
+                return inserted;
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             sqlSession.rollback();
+            return 0;
         } finally {
             sqlSession.close();
         }
     }
 
-    public StockUpDownVO selectStockUpDownByUUID(int uuid) {
+    public StockUpDownTrialVO selectStockUpDownByUUID(int uuid) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         try {
             StockUpDownTrialDAO stockUpDownTrialDAO = new StockUpDownTrialDAO(sqlSession);

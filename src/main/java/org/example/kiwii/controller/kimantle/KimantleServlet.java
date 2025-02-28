@@ -73,7 +73,15 @@ public class KimantleServlet extends HttpServlet {
                     PointHistoryVO pointHistoryVO = new PointHistoryVO();
                     pointHistoryVO.setUuid(uuid);
                     pointHistoryVO.setContent("Kimantle 정답");
-                    pointHistoryVO.setAmount(200);
+                    List<KimantleVO> recentTrials = kimantleService.getRecentTrials(uuid);
+                    int tryCount = recentTrials.size();
+                    if (tryCount < 5) {
+                        pointHistoryVO.setAmount(200);
+                    } else if (tryCount < 8) {
+                        pointHistoryVO.setAmount(180);
+                    } else {
+                        pointHistoryVO.setAmount(150);
+                    }
 
                     UserService userService = new UserService();
                     userService.depositPointByUserUUID(pointHistoryVO);
@@ -81,8 +89,14 @@ public class KimantleServlet extends HttpServlet {
                 jsonResponse.put("correct", correct);
 
                 // 3. 입력 로그 저장
-                kimantleService.insertTrials(result, userWord, uuid);
-                jsonResponse.put("status", "success");
+                int inserted = kimantleService.insertTrials(result, userWord, uuid);
+                if (inserted != 0) {
+                    jsonResponse.put("status", "success");
+                } else{
+                    jsonResponse.put("status", "fail");
+                    jsonResponse.put("message", "이미 입력한 단어입니다.");
+                }
+
             } else {
                 jsonResponse.put("status", "fail");
                 jsonResponse.put("message", "단어가 오늘의 순위에 없습니다.");
