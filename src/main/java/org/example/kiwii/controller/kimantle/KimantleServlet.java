@@ -1,9 +1,7 @@
 package org.example.kiwii.controller.kimantle;
 
 import com.google.gson.Gson;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.example.kiwii.CookieUtil.CookieUtil;
-import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.service.kimantle.KimantleService;
 import org.example.kiwii.vo.kimantle.KimantleVO;
 

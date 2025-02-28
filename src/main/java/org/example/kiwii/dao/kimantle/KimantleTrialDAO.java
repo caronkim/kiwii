@@ -16,7 +16,6 @@ public class KimantleTrialDAO {
         try {
             return sqlSession.selectOne("KimantleTrial.selectCosineSimilarity", word);
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
             return null;
         }
