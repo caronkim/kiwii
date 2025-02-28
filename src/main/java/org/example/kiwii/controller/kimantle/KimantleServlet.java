@@ -64,7 +64,7 @@ public class KimantleServlet extends HttpServlet {
                 jsonResponse.put("similarity", result.getCosineSimilarity());
 
                 // 3. 입력 로그 저장
-                kimantleService.insertTrials(result, userWord, uuid);
+                kimantleService.insertTrials(result, userWord, Integer.parseInt(uuid));
                 jsonResponse.put("status", "success");
 
                 if (result.getRank() == 0) {
@@ -102,7 +102,7 @@ public class KimantleServlet extends HttpServlet {
             jsonResponse.put("status", "error");
             jsonResponse.put("message", "UUID가 필요합니다.");
         } else {
-            List<KimantleVO> recentTrials = kimantleService.getRecentTrials(uuid);
+            List<KimantleVO> recentTrials = kimantleService.getRecentTrials(Integer.parseInt(uuid));
             if (recentTrials.isEmpty()) {
                 jsonResponse.put("message", "최근 기록이 없습니다.");
             } else {

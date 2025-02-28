@@ -52,7 +52,8 @@ public class KimantleTrialDAO {
 
     public List<KimantleVO> getRecentTrials(int uuid) {
         try {
-            return sqlSession.selectList("KimantleTrial.getRecentTrials", uuid);
+            System.out.println("현재 uuid : " + uuid);
+            return sqlSession.selectList("KimantleTrial.getRecentTrials", String.valueOf(uuid));
         } catch (Exception e) {
             throw new RuntimeException("getRecentTrials 실행 중 오류 발생: " + e.getMessage());
         }
