@@ -25,7 +25,7 @@
 
     <insert id="insertTodayWord" parameterType="String">
         <![CDATA[
-        INSERT INTO KOMANTLE_WORD_RANK_TABLE (word, rank, cosine_similarity)
+        INSERT INTO KOMANTLE_WORD_RANK_TABLE (word, rank, cos_sim)
         WITH word_sim AS (
             SELECT
                 e1.word AS word,
