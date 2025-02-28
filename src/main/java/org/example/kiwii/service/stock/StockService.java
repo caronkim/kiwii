@@ -26,8 +26,8 @@ public class StockService {
 
             // 3️⃣ 확률 기반 랜덤 주식 선택
             StockDAO stockDAO = new StockDAO(sqlSession);
-            /// random number 구현 필요
-            int randomNumber = (int) (Math.random() * 5) + 1;
+            /// random number
+            int randomNumber = (int) (Math.random() * 10) + 1;
 
             StockVO randomStocks = stockDAO.selectStockById(randomNumber); // 1개 지급
 
