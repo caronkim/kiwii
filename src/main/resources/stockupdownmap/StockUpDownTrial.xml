@@ -7,7 +7,11 @@
     <insert id="insertStockUpDownTrial" parameterType="StockUpDownVO">
         <![CDATA[
         INSERT INTO PREDICT_STOCK_TRIALS (ID, USER_ANSWER, PREDICT_GAME_ID, UUID)
-        VALUES (STOCK_TRIAL_ID_SEQ.nextval, #{userAnswer}, #{gameId}, #{uuid})
+        VALUES (STOCK_TRIAL_ID_SEQ.nextval, #{userAnswer},
+                (SELECT PREDICT_GAME_ID
+                 FROM PREDICT_STOCK
+                 WHERE TRUNC(CREATED_AT) = TRUNC(SYSDATE)),
+                #{uuid})
         ]]>
     </insert>
 

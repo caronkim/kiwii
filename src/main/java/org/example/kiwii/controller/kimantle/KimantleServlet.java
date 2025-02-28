@@ -1,11 +1,7 @@
 package org.example.kiwii.controller.kimantle;
 
 import com.google.gson.Gson;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.example.kiwii.CookieUtil.CookieUtil;
-import org.example.kiwii.dao.kimantle.KimantleTrialDAO;
-import org.example.kiwii.mybatis.MyBatisSessionFactory;
 import org.example.kiwii.service.kimantle.KimantleService;
 import org.example.kiwii.vo.kimantle.KimantleVO;
 
@@ -13,38 +9,36 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
+
 @WebServlet("/api/kimantle")
 public class KimantleServlet extends HttpServlet {
-
-    private SqlSessionFactory sqlSessionFactory;
-    private KimantleTrialDAO kimantleTrialDAO;
-
-    @Override
-    public void init() {
-        sqlSessionFactory = MyBatisSessionFactory.getSqlSessionFactory();
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        // CORS 설정 추가
-        response.setHeader("Access-Control-Allow-Origin", "*"); // 모든 도메인 허용 (배포 시 특정 도메인으로 변경)
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-        String userWord = request.getParameter("word");
+        BufferedReader reader = request.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String json = jsonBuilder.toString();
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(json, Map.class);
+        String userWord = (String) map.get("word");
         String uuid = CookieUtil.getCookieValue(request, "uuid");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
         Map<String, Object> jsonResponse = new HashMap<>();
         KimantleService kimantleService = new KimantleService();
 
@@ -82,34 +76,27 @@ public class KimantleServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        // CORS 설정 추가
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-        String uuid = request.getParameter("uuid");
+        String uuid = getCookieValue(request, "uuid");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         Map<String, Object> jsonResponse = new HashMap<>();
+        KimantleService kimantleService = new KimantleService();
 
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            kimantleTrialDAO = new KimantleTrialDAO(sqlSession);
-
-            if (uuid == null || uuid.isEmpty()) {
-                jsonResponse.put("status", "fail");
-                jsonResponse.put("message", "UUID가 필요합니다.");
-            } else {
-                List<KimantleVO> recentTrials = kimantleTrialDAO.getRecentTrials(uuid);
-                jsonResponse.put("status", "success");
-                jsonResponse.put("history", recentTrials);
-            }
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        if (uuid == null || uuid.isEmpty()) {
             jsonResponse.put("status", "error");
-            jsonResponse.put("message", e.getMessage());  // 🔥 예외 메시지를 반환
-//            e.printStackTrace(); // 콘솔에 로그 출력
+            jsonResponse.put("message", "UUID가 필요합니다.");
+        } else {
+            List<KimantleVO> recentTrials = kimantleService.getRecentTrials(uuid);
+            if (recentTrials.isEmpty()) {
+                jsonResponse.put("message", "최근 기록이 없습니다.");
+            } else {
+                jsonResponse.put("message", "최근 기록이 있습니다");
+            }
+            jsonResponse.put("status", "success");
+            jsonResponse.put("history", recentTrials);
         }
 
         out.print(gson.toJson(jsonResponse));

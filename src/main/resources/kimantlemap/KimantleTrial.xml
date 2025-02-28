@@ -15,7 +15,7 @@
         ]]>
     </select>
 
-    <select id="isWord" parameterType="String" resultType="boolean">
+    <select id="isWord" parameterType="String" resultType="KimantleVO">
         <![CDATA[
         SELECT *
         FROM EMBEDDING_TABLE
@@ -25,7 +25,7 @@
 
     <insert id="insertTodayWord" parameterType="String">
         <![CDATA[
-        INSERT INTO KOMANTLE_WORD_RANK_TABLE (word, rank, cosine_similarity)
+        INSERT INTO KOMANTLE_WORD_RANK_TABLE (word, rank, cos_sim)
         WITH word_sim AS (
             SELECT
                 e1.word AS word,
@@ -52,12 +52,18 @@
 
     <insert id="insertTrials" parameterType="KimantleVO">
         <![CDATA[
-        INSERT INTO KOMANTLE_TRIALS (word, rank, cos_sim, uuid)
-        VALUES (#{word}, #{rank}, #{cosineSimilarity}, #{uuid})
+        INSERT INTO KOMANTLE_TRIALS (word, rank, cos_sim, uuid, try_seq)
+        VALUES (#{word}, #{rank}, #{cosineSimilarity}, #{uuid},
+                (SELECT NVL(MAX(try_seq), 0) + 1
+                 FROM KOMANTLE_TRIALS
+                 WHERE uuid = #{uuid}
+                    AND TRUNC(CREATED_AT) = TRUNC(SYSDATE) )
+               )
         ]]>
     </insert>
 
     <select id="getRecentTrials" parameterType="String" resultType="KimantleVO">
+        <![CDATA[
         SELECT *
         FROM (
             SELECT word, rank, cos_sim, uuid
@@ -66,6 +72,7 @@
                 AND TRUNC(CREATED_AT) = TRUNC(SYSDATE)
             ORDER BY try_seq DESC)
         WHERE ROWNUM <= 10
+        ]]>
     </select>
 
 </mapper>

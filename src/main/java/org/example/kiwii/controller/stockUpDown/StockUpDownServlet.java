@@ -11,30 +11,42 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
+
 import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
 
 @WebServlet("/api/stock-up-down/*")
 public class StockUpDownServlet extends HttpServlet {
-    private final Gson gson = new Gson();
     private final StockUpDownService stockUpDownService = new StockUpDownService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String json = jsonBuilder.toString();
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(json, Map.class);
 
         if (pathInfo.equals("/predict")) {
-            String userAnswer = req.getParameter("trial");
-            String predictGameId = req.getParameter("gameId");
+            String userAnswer = (String) map.get("trial");
+            String predictGameId = "";
+//            String predictGameId = (String) map.get("gameId");
             String uuid = getCookieValue(req, "uuid");
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
             PrintWriter out = resp.getWriter();
-            Gson gson = new Gson();
 
             StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, predictGameId, userAnswer);
+//            StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, userAnswer);
             // 사용자 입력 정답 DB에 저장
             stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
@@ -66,7 +78,7 @@ public class StockUpDownServlet extends HttpServlet {
 
         if (stockUpDownVO == null) {
             // 사용자의 예측 기록이 없을 경우
-            apiResponse = new ApiResponse<>(200, "no trial today", stockUpDownVO);
+            apiResponse = new ApiResponse<>(200, "no trial today", null);
         } else {
             // 응답 데이터 구성
             apiResponse = new ApiResponse<>(200, "success", stockUpDownVO);

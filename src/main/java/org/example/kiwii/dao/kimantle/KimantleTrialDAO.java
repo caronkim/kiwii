@@ -3,7 +3,6 @@ package org.example.kiwii.dao.kimantle;
 import org.apache.ibatis.session.SqlSession;
 import org.example.kiwii.vo.kimantle.KimantleVO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class KimantleTrialDAO {
@@ -15,9 +14,8 @@ public class KimantleTrialDAO {
 
     public KimantleVO tryAnswer(String word) {
         try {
-            return sqlSession.selectOne("KomantleTrial.selectCosineSimilarity", word);
+            return sqlSession.selectOne("KimantleTrial.selectCosineSimilarity", word);
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
             return null;
         }
@@ -25,9 +23,9 @@ public class KimantleTrialDAO {
 
     public boolean isWord(String word) {
         try {
-            return sqlSession.selectOne("KomantleTrial.isWord", word) != null;
+            KimantleVO result = sqlSession.selectOne("KimantleTrial.isWord", word);
+            return result != null;
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
             return false;
         }
@@ -35,9 +33,8 @@ public class KimantleTrialDAO {
 
     public void insertTodayWord(String word) {
         try {
-            sqlSession.insert("KomantleTrial.insertTodayWord", word);
+            sqlSession.insert("KimantleTrial.insertTodayWord", word);
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
@@ -47,9 +44,8 @@ public class KimantleTrialDAO {
         kimantleVO.setWord(word);
 
         try {
-            sqlSession.insert("KomantleTrial.insertTrials", kimantleVO);
+            sqlSession.insert("KimantleTrial.insertTrials", kimantleVO);
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
@@ -58,9 +54,7 @@ public class KimantleTrialDAO {
         try {
             return sqlSession.selectList("KimantleTrial.getRecentTrials", uuid);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("getRecentTrials 실행 중 오류 발생: " + e.getMessage());
-//            return new ArrayList<>();
         }
     }
 }
