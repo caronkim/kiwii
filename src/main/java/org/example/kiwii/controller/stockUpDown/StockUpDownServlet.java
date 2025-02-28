@@ -48,22 +48,30 @@ public class StockUpDownServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
 
             StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, predictGameId, userAnswer);
-//            StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, userAnswer);
-            // 사용자 입력 정답 DB에 저장
-            int inserted = stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
-            if (inserted == 0) {
-                // 실패 시
-                apiResponse = new ApiResponse<>(400, "fail", "Failed to record prediction");
+            if ("O".equals(userAnswer) || "X".equals(userAnswer)) {
+                // 사용자 입력 정답 DB에 저장
+                int inserted = stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
+                if (inserted == 0) {
+                    // 실패 시
+                    apiResponse = new ApiResponse<>(400, "fail", "Failed to record prediction");
+
+                } else {
+                    // 응답 데이터 구성
+                    apiResponse = new ApiResponse<>(200, "success", "Prediction recorded successfully");
+                }
+                // JSON 응답 전송
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
             } else {
-                // 응답 데이터 구성
-                apiResponse = new ApiResponse<>(200, "success", "Prediction recorded successfully");
+                // 사용자 입력이 O 또는 X가 아닌 경우
+                apiResponse = new ApiResponse<>(400, "fail", "Not a valid answer");
+                out.write(gson.toJson(apiResponse));
+                out.flush();
+                out.close();
             }
-            // JSON 응답 전송
-            out.write(gson.toJson(apiResponse));
-            out.flush();
-            out.close();
 
         } else {
             // 잘못된 요청 처리
