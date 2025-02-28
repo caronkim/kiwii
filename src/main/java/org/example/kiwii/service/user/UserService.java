@@ -126,9 +126,26 @@ public class UserService {
     public UserVO insertUser(UserVO registerTryUser) {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         UserDAO userDAO = new UserDAO(sqlSession);
+        PointDAO pointDAO = new PointDAO(sqlSession);
 
         try {
-            UserVO registeredUser = userDAO.insertUser(registerTryUser);
+            int initialPoint =300;
+            registerTryUser.setPoint(initialPoint);
+            UserVO registerSuccessUser = userDAO.insertUser(registerTryUser);
+            if(registerSuccessUser == null){
+                sqlSession.rollback();
+                return null;
+            }
+            UserVO registeredUser = userDAO.selectUserByUsername(registerSuccessUser.getUsername());
+
+            PointHistoryVO pointHistoryVO = new PointHistoryVO();
+            pointHistoryVO.setUuid(registeredUser.getUuid());
+            pointHistoryVO.setAmount(initialPoint);
+            pointHistoryVO.setContent("신규 가입");
+
+            pointDAO.insertPointHistory(pointHistoryVO);
+
+
             sqlSession.commit();
             return registeredUser;
 

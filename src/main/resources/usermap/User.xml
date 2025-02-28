@@ -160,7 +160,7 @@
     >
     <![CDATA[
         INSERT INTO USERS (USERNAME, PASSWORD, ACCOUNT_ID, POINT, CREATED_AT, UPDATED_AT)
-        VALUES (#{username}, #{password}, #{accountId}, 0, SYSTIMESTAMP, SYSTIMESTAMP)
+        VALUES (#{username}, #{password}, #{accountId}, #{point}, SYSTIMESTAMP, SYSTIMESTAMP)
         ]]>
     </insert>
 
