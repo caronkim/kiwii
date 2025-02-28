@@ -19,7 +19,7 @@
               AND PREDICT_GAME_ID = (SELECT PREDICT_GAME_ID
                                      FROM PREDICT_STOCK
                                      WHERE TRUNC(CREATED_AT) = TRUNC(SYSDATE))
-        );
+        )
         ]]>
     </insert>
 
