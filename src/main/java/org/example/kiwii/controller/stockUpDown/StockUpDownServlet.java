@@ -11,8 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
+
 import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
 
 @WebServlet("/api/stock-up-down/*")
@@ -23,16 +26,24 @@ public class StockUpDownServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String json = jsonBuilder.toString();
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(json, Map.class);
 
         if (pathInfo.equals("/predict")) {
-            String userAnswer = req.getParameter("trial");
-            String predictGameId = req.getParameter("gameId");
+            String userAnswer = (String) map.get("trial");
+            String predictGameId = (String) map.get("gameId");
             String uuid = getCookieValue(req, "uuid");
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
             PrintWriter out = resp.getWriter();
-            Gson gson = new Gson();
 
             StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, predictGameId, userAnswer);
             // 사용자 입력 정답 DB에 저장
