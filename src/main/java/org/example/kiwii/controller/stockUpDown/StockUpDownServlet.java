@@ -20,7 +20,6 @@ import static org.example.kiwii.CookieUtil.CookieUtil.getCookieValue;
 
 @WebServlet("/api/stock-up-down/*")
 public class StockUpDownServlet extends HttpServlet {
-    private final Gson gson = new Gson();
     private final StockUpDownService stockUpDownService = new StockUpDownService();
 
     @Override
@@ -38,7 +37,8 @@ public class StockUpDownServlet extends HttpServlet {
 
         if (pathInfo.equals("/predict")) {
             String userAnswer = (String) map.get("trial");
-            String predictGameId = (String) map.get("gameId");
+            String predictGameId = "";
+//            String predictGameId = (String) map.get("gameId");
             String uuid = getCookieValue(req, "uuid");
 
             resp.setContentType("application/json");
@@ -46,6 +46,7 @@ public class StockUpDownServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
 
             StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, predictGameId, userAnswer);
+//            StockUpDownTrialVO stockUpDownTrialVO = new StockUpDownTrialVO(uuid, userAnswer);
             // 사용자 입력 정답 DB에 저장
             stockUpDownService.insertStockUpDownTrial(stockUpDownTrialVO);
 
@@ -77,7 +78,7 @@ public class StockUpDownServlet extends HttpServlet {
 
         if (stockUpDownVO == null) {
             // 사용자의 예측 기록이 없을 경우
-            apiResponse = new ApiResponse<>(200, "no trial today", stockUpDownVO);
+            apiResponse = new ApiResponse<>(200, "no trial today", null);
         } else {
             // 응답 데이터 구성
             apiResponse = new ApiResponse<>(200, "success", stockUpDownVO);
