@@ -73,7 +73,15 @@ public class KimantleServlet extends HttpServlet {
                     PointHistoryVO pointHistoryVO = new PointHistoryVO();
                     pointHistoryVO.setUuid(uuid);
                     pointHistoryVO.setContent("Kimantle 정답");
-                    pointHistoryVO.setAmount(200);
+                    List<KimantleVO> recentTrials = kimantleService.getRecentTrials(uuid);
+                    int tryCount = recentTrials.size();
+                    if (tryCount < 5) {
+                        pointHistoryVO.setAmount(200);
+                    } else if (tryCount < 8) {
+                        pointHistoryVO.setAmount(180);
+                    } else {
+                        pointHistoryVO.setAmount(150);
+                    }
 
                     UserService userService = new UserService();
                     userService.depositPointByUserUUID(pointHistoryVO);
