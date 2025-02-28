@@ -99,6 +99,28 @@
         ]]>
     </select>
 
+    <select id="selectTopTenUserWithRank"
+            parameterType="Integer"
+            resultType="org.example.kiwii.dto.user.UserInfoDTO"
+            resultMap="UserWithRankResultMap">
+    <![CDATA[
+        SELECT *
+        from (SELECT UUID,
+                     USERNAME,
+                     PASSWORD,
+                     ACCOUNT_ID,
+                     POINT,
+                     CREATED_AT,
+                     UPDATED_AT,
+                     DELETED_AT,
+                     TOTAL_EARNED_POINTS                             AS TOTAL_EARNED_POINTS,
+                     RANK() OVER (ORDER BY TOTAL_EARNED_POINTS DESC) AS RANK
+              FROM USERS
+              WHERE TOTAL_EARNED_POINTS > 0)
+        where RANK <= 10
+        ]]>
+    </select>
+
     <select id="selectUserPointByUserUUID"
             parameterType="Integer"
             resultType="Integer"

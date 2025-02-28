@@ -175,26 +175,25 @@ public class UserService {
     public List<UserRankDTO> selectUserByRank() {
         SqlSession sqlSession = MyBatisSessionFactory.getSqlSessionFactory().openSession();
         UserDAO userDAO = new UserDAO(sqlSession);
-        List<UserVO> rankedUser = userDAO.selectUserByRank();
-        if (rankedUser == null) {
+        List<UserInfoDTO> TopTenUserLIst = userDAO.selectTopTenUserByRank();
+        if (TopTenUserLIst == null) {
             sqlSession.close();
             return null;
         } else {
-            sqlSession.close();
-            List<UserRankDTO> userRankDTOList = new ArrayList<UserRankDTO>();
-            int rank = 1;
-            for (UserVO userVO : rankedUser) {
-                if(rank > 11)
-                    break;
-                UserRankDTO userDTO = new UserRankDTO(
-                        userVO.getUsername(),
-                        userVO.getTotalEarnedPoints(),
-                        rank
-                );
-                userRankDTOList.add(userDTO);
-                rank++;
+            // UserVO를 UserRankDTO로 변경
+            List<UserRankDTO> topTenUserDTO = new ArrayList<>();
+            for(UserInfoDTO userInfoDTO : TopTenUserLIst) {
+                UserRankDTO userRankDTO = new UserRankDTO(
+                        userInfoDTO.getUsername(),
+                        userInfoDTO.getTotalEarnedPoints(),
+                        userInfoDTO.getRank());
+
+                topTenUserDTO.add(userRankDTO);
             }
-            return userRankDTOList;
+
+            sqlSession.close();
+
+            return topTenUserDTO;
         }
 
     }

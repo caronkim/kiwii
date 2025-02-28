@@ -1,10 +1,13 @@
 package org.example.kiwii.service.wordle;
 
 import org.apache.ibatis.session.SqlSession;
+import org.example.kiwii.dao.point.PointDAO;
+import org.example.kiwii.dao.user.UserDAO;
 import org.example.kiwii.dao.wordle.WordleQuizDAO;
 import org.example.kiwii.dao.wordle.WordleTrialDAO;
 import org.example.kiwii.dao.wordle.WordleWordDAO;
 import org.example.kiwii.mybatis.MyBatisSessionFactory;
+import org.example.kiwii.vo.point.PointHistoryVO;
 import org.example.kiwii.vo.wordle.WordleQuizVO;
 import org.example.kiwii.vo.wordle.WordleTrialVO;
 
@@ -84,8 +87,45 @@ public class WordleService {
                 return null;
             }
 
-            // todo:: 포인트 처리
 
+            // todo:: 포인트 처리 200point
+            if (newTrial.isAnswer()) {
+                int point = 200;
+
+                UserDAO userDAO = new UserDAO(sqlSession);
+                PointDAO pointDAO = new PointDAO(sqlSession);
+
+                try {
+                    Integer beforePoint = userDAO.selectUserPointByUserUUID(userId);
+                    Integer beforeTotalEarnedPoint = userDAO.selectUserTotalEarnedPointByUserUUID(userId);
+
+                    if (beforePoint == null || beforeTotalEarnedPoint == null) {
+                        sqlSession.rollback();
+                        return null;  // 사용자 정보 없음
+                    }
+
+                    int afterPoint = beforePoint + point;
+                    int afterTotalEarnedPoint = beforeTotalEarnedPoint + point;
+
+                    // ✅ user point update
+                    userDAO.updateUserPointByUserUUID(userId, afterPoint);
+
+                    // ✅ user Total earned point update
+                    userDAO.updateUserTotalEarnedPointByUserUUID(userId, afterTotalEarnedPoint);
+
+                    // ✅ point history insert
+                    PointHistoryVO pointHistoryVO = new PointHistoryVO();
+                    pointHistoryVO.setUuid(userId);
+                    pointHistoryVO.setAmount(point);
+                    pointHistoryVO.setContent("kidle 정답");
+
+                    pointDAO.insertPointHistory(pointHistoryVO);
+
+                } catch (Exception e) {
+                    sqlSession.rollback(); // 예외 발생 시 롤백
+                    return null;
+                }
+            }
 
             sqlSession.commit();
             return newTrial;
